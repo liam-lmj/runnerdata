@@ -1,5 +1,6 @@
 import os
 import requests
+import sqlite3
 from datetime import datetime
 from dotenv import load_dotenv
 from constants import refresh_url, activities_url, laps_url_start, lap_url_end, page_limit, min_miles_conversion
@@ -23,10 +24,12 @@ def get_activities(access_token):
     response_json = response.json()
     activity_list = []
     for activity in response_json:
+        activity_id = str(activity["id"])
+        if activity_exists(activity_id):
+            continue
         activity_dict = {}
         date_string = activity["start_date"]
         date = datetime.strptime(date_string, "%Y-%m-%dT%H:%M:%SZ")
-        activity_id = str(activity["id"])
         laps = get_activity_laps(access_token, activity_id)
 
         activity_dict["runner"] = activity["athlete"]["id"]
@@ -54,3 +57,14 @@ def get_activity_laps(access_token, activity_id):
 
         lap_list.append(lap_dict)
     return lap_list
+
+def activity_exists(activity_id):
+    conn = sqlite3.connect('runner.db')
+    c = conn.cursor()
+    c.execute(f"SELECT * FROM activity WHERE id = {activity_id}")
+    exists = c.fetchone()
+    conn.close()
+    if exists:
+        return True
+    else:
+        return False

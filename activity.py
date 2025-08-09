@@ -1,6 +1,5 @@
 import sqlite3
 from constants import session_pace
-#remove magic number
 
 class Activity:
     def __init__(self, activity):

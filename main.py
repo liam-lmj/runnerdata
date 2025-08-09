@@ -21,7 +21,7 @@ def main():
 
         access_token = new_access_token(runner.refresh_token)
         activities_json = get_activities(access_token)
-
+        
         new_activities = []
         activity_weeks = set()
 
