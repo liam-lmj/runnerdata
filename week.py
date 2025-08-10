@@ -1,6 +1,7 @@
 import sqlite3
 import json
 from datetime import datetime, timedelta
+from constants import min_miles_conversion
 
 class Week:
     def __init__(self, week, runner_id):
@@ -38,7 +39,7 @@ class Week:
         self.session_count = 0
         self.run_count = 0
         self.hard_pace = 0
-        total_pace = 0 
+        self.hard_time = 0
 
         for activity in activities:
             date_string = activity["date"]
@@ -48,12 +49,12 @@ class Week:
             easy_distance = activity["easy_distance"]
             hard_distance = activity["hard_distance"]
             run_type = activity["run_type"]
-            hard_pace = activity["rep_pace"]
+            hard_time = activity["hard_time"]
             self.total_distance += (easy_distance + hard_distance)
             self.hard_distance += hard_distance
             self.easy_distance += easy_distance
             self.run_count += 1
-            total_pace += hard_pace
+            self.hard_time += hard_time
             if run_type == "Session":
                 self.session_count += 1
             
@@ -61,27 +62,32 @@ class Week:
                 days[date_day]["hard_distance"] += hard_distance
                 days[date_day]["easy_distance"] += easy_distance
                 days[date_day]["total_distance"] += (hard_distance + easy_distance)
+                days[date_day]["hard_time"] += hard_time
                 
                 days[date_day]["count_of_runs"] += 1
                 if run_type == "Session":
                     days[date_day]["count_of_sessions"] += 1
-                    days[date_day]["hard_pace"] += hard_pace
-                    days[date_day]["hard_pace"] /= 2            
+                    if hard_time > 0 and hard_distance > 0:
+                        days[date_day]["hard_pace"] = round(min_miles_conversion / (days[date_day]["hard_distance"] / days[date_day]["hard_time"]), 2)
             else:
                 day_details = {}
 
                 day_details["hard_distance"] = hard_distance
                 day_details["easy_distance"] = easy_distance
                 day_details["total_distance"] = hard_distance + easy_distance
+                day_details["hard_time"] = hard_time
                 day_details["count_of_runs"] = 1
                 day_details["count_of_sessions"] = 0
                 if run_type == "Session":
                     day_details["count_of_sessions"] += 1
-                day_details["hard_pace"] = hard_pace
+                if hard_time > 0 and hard_distance > 0:
+                    day_details["hard_pace"] = round(min_miles_conversion / (hard_distance / hard_time), 2)
+                else:
+                    day_details["hard_pace"] = 0
                 days[date_day] = day_details
         
-        if self.session_count > 0:
-            self.hard_pace = total_pace / self.session_count
+        if self.hard_distance > 0 and self.hard_time:
+            self.hard_pace = round(min_miles_conversion / (self.hard_distance / self.hard_time), 2)
         self.days = days 
 
     def week_exists(self):
@@ -107,7 +113,8 @@ class Week:
                   {self.session_count},
                   {self.hard_pace}),
                   {self.run_count},
-                  '{json.dumps(self.days)}'
+                  '{json.dumps(self.days)}',
+                  {self.hard_time}
                   """)
         conn.commit()
         conn.close()
@@ -123,7 +130,8 @@ class Week:
                     session_count = {self.session_count},
                     hard_pace = {self.hard_pace},
                     run_count = {self.run_count},
-                    days = '{json.dumps(self.days)}'
+                    days = '{json.dumps(self.days)}',
+                    hard_time = {self.hard_time}
                     WHERE week = '{self.week}'
                     """)
         conn.commit()

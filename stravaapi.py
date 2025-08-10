@@ -53,6 +53,7 @@ def get_activity_laps(access_token, activity_id):
 
         lap_dict["lap"] = lap["name"]
         lap_dict["distance"] = lap["distance"]
+        lap_dict["moving_time"] = lap["moving_time"]
         lap_dict["speed"] = speed
 
         lap_list.append(lap_dict)

@@ -1,5 +1,5 @@
 import sqlite3
-from constants import session_pace
+from constants import session_pace, min_miles_conversion
 
 class Activity:
     def __init__(self, activity):
@@ -11,27 +11,29 @@ class Activity:
     
     def set_up_lap_attributes(self, laps):
         count_of_reps = 0
-        rep_pace_sum = 0
         hard_distance = 0
+        hard_time = 0
         easy_distance = 0
         rep_pace = 0
         run_type = None
         for lap in laps:
             pace = lap["speed"]
+            moving_time = lap["moving_time"]
             distance = lap["distance"]
             if pace < session_pace:
                 count_of_reps += 1
-                rep_pace_sum += pace
+                hard_time += moving_time
                 hard_distance += distance
             else:
                 easy_distance += distance
-        if count_of_reps > 0:
+        if hard_distance > 0 and hard_time > 0:
             run_type = "Session"
-            rep_pace = round(rep_pace_sum / count_of_reps, 2)
+            rep_pace = round(min_miles_conversion / (hard_distance / hard_time), 2)
         else:
             run_type = "easy"
         self.count_of_reps = count_of_reps
         self.hard_distance = hard_distance
+        self.hard_time = hard_time
         self.rep_pace = rep_pace
         self.easy_distance = easy_distance
         self.run_type = run_type
@@ -59,7 +61,8 @@ class Activity:
                   {self.hard_distance},
                   {self.easy_distance},
                   {self.count_of_reps},
-                  {self.rep_pace})""")
+                  {self.rep_pace},
+                  {self.hard_time})""")
         conn.commit()
         conn.close()
 
@@ -74,7 +77,8 @@ class Activity:
                     easy_distance = {self.easy_distance},
                     hard_distance = {self.hard_distance},
                     rep_count = {self.count_of_reps},
-                    rep_pace = {self.rep_pace}
+                    rep_pace = {self.rep_pace},
+                    hard_time = {self.hard_time}
                     WHERE id = {self.activity_id}
                     """)
         conn.commit()
