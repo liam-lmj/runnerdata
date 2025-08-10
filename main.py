@@ -5,6 +5,7 @@ from runner import Runner
 from activity import Activity
 from week import Week
 
+#TODO fix pace averages for sessions and weeks/ days
 def main():
     conn = sqlite3.connect('runner.db')
     conn.row_factory = sqlite3.Row  
