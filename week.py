@@ -40,6 +40,8 @@ class Week:
         self.run_count = 0
         self.hard_pace = 0
         self.hard_time = 0
+        self.easy_time = 0
+        self.easy_pace = 0
 
         for activity in activities:
             date_string = activity["date"]
@@ -50,11 +52,13 @@ class Week:
             hard_distance = activity["hard_distance"]
             run_type = activity["run_type"]
             hard_time = activity["hard_time"]
+            easy_time = activity["easy_time"]
             self.total_distance += (easy_distance + hard_distance)
             self.hard_distance += hard_distance
             self.easy_distance += easy_distance
             self.run_count += 1
             self.hard_time += hard_time
+            self.easy_time += easy_time
             if run_type == "Session":
                 self.session_count += 1
             
@@ -86,8 +90,10 @@ class Week:
                     day_details["hard_pace"] = 0
                 days[date_day] = day_details
         
-        if self.hard_distance > 0 and self.hard_time:
+        if self.hard_distance > 0 and self.hard_time > 0:
             self.hard_pace = round(min_miles_conversion / (self.hard_distance / self.hard_time), 2)
+        if self.easy_distance and self.easy_time > 0:
+            self.easy_pace = round(min_miles_conversion / (self.easy_distance / self.easy_time), 2)
         self.days = days 
 
     def week_exists(self):
@@ -111,10 +117,12 @@ class Week:
                   {self.hard_distance},
                   {self.easy_distance},
                   {self.session_count},
-                  {self.hard_pace}),
+                  {self.hard_pace},
                   {self.run_count},
                   '{json.dumps(self.days)}',
-                  {self.hard_time}
+                  {self.hard_time},
+                  {self.easy_pace,},
+                  {self.easy_time})
                   """)
         conn.commit()
         conn.close()
@@ -131,7 +139,9 @@ class Week:
                     hard_pace = {self.hard_pace},
                     run_count = {self.run_count},
                     days = '{json.dumps(self.days)}',
-                    hard_time = {self.hard_time}
+                    hard_time = {self.hard_time},
+                    easy_pace = {self.easy_pace},
+                    easy_time = {self.easy_time}
                     WHERE week = '{self.week}'
                     """)
         conn.commit()

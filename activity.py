@@ -14,7 +14,9 @@ class Activity:
         hard_distance = 0
         hard_time = 0
         easy_distance = 0
+        easy_time = 0
         rep_pace = 0
+        easy_pace = 0
         run_type = None
         for lap in laps:
             pace = lap["speed"]
@@ -26,16 +28,21 @@ class Activity:
                 hard_distance += distance
             else:
                 easy_distance += distance
+                easy_time += moving_time
         if hard_distance > 0 and hard_time > 0:
             run_type = "Session"
             rep_pace = round(min_miles_conversion / (hard_distance / hard_time), 2)
         else:
             run_type = "easy"
+        if easy_distance > 0 and easy_time > 0:
+            easy_pace = round(min_miles_conversion / (easy_distance / easy_time), 2)
         self.count_of_reps = count_of_reps
         self.hard_distance = hard_distance
         self.hard_time = hard_time
         self.rep_pace = rep_pace
         self.easy_distance = easy_distance
+        self.easy_pace = easy_pace
+        self.easy_time = easy_time
         self.run_type = run_type
 
     def activity_exists(self):
@@ -62,7 +69,9 @@ class Activity:
                   {self.easy_distance},
                   {self.count_of_reps},
                   {self.rep_pace},
-                  {self.hard_time})""")
+                  {self.hard_time},
+                  {self.easy_pace},
+                  {self.easy_time})""")
         conn.commit()
         conn.close()
 
@@ -78,7 +87,9 @@ class Activity:
                     hard_distance = {self.hard_distance},
                     rep_count = {self.count_of_reps},
                     rep_pace = {self.rep_pace},
-                    hard_time = {self.hard_time}
+                    hard_time = {self.hard_time},
+                    easy_pace = {self.easy_pace},
+                    easy_time = {self.easy_time}
                     WHERE id = {self.activity_id}
                     """)
         conn.commit()

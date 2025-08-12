@@ -36,7 +36,6 @@ def get_activity_data():
 df_week = pd.DataFrame(map(dict, get_week_data()))
 df_runner = pd.DataFrame(map(dict, get_runner_data()))
 df_activity = pd.DataFrame(map(dict, get_activity_data()))
-
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 app.layout = dbc.Container([
@@ -55,7 +54,8 @@ app.layout = dbc.Container([
         dbc.Col([
             dbc.CardBody([
                 html.H4("Pace Graph", className="card-title"),
-                dcc.Graph(figure=px.line(df_week, x="week", y="hard_pace",  title="Session Pace"))
+                dcc.Dropdown(['easy_pace', 'hard_pace'], 'hard_pace', id="pace_graph_item"),
+                dcc.Graph(id="pace_graph")
             ])
         ], width=6)
     ]),
@@ -83,6 +83,14 @@ app.layout = dbc.Container([
 )
 def mileage_graph(col_chosen):
     fig = px.bar(df_week, x="week", y=col_chosen,  title="Weekly Mileage")
+    return fig
+
+@callback(
+    Output(component_id='pace_graph', component_property='figure'),
+    Input(component_id='pace_graph_item', component_property='value')
+)
+def pace_graph(col_chosen):
+    fig = px.line(df_week, x="week", y=col_chosen,  title="Pace Trend")
     return fig
 
 if __name__ == '__main__':
