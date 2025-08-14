@@ -5,6 +5,7 @@ import dash_bootstrap_components as dbc
 import dash
 from dash import Dash, html, dash_table, dcc, callback, Output, Input
 
+#TODO need to add user to the sql calls to support multiple data in the future
 
 def get_week_data():
     conn = sqlite3.connect('runner.db')
@@ -15,27 +16,29 @@ def get_week_data():
     conn.close()
     return weeks
 
-def get_runner_data():
-    conn = sqlite3.connect('runner.db')
-    conn.row_factory = sqlite3.Row  
-    c = conn.cursor()
-    c.execute("SELECT * FROM runner")
-    runners = c.fetchall()
-    conn.close()
-    return runners
+def get_days_day(weeks):
+    days_dict = {
+    "week": [],
+    "day": [],
+    "total_distance": [],
+    "hard_pace": []
+    }
 
-def get_activity_data():
-    conn = sqlite3.connect('runner.db')
-    conn.row_factory = sqlite3.Row  
-    c = conn.cursor()
-    c.execute("SELECT * FROM activity ORDER BY date ASC")
-    activities = c.fetchall()
-    conn.close()
-    return activities
+    for row in weeks:
+        week = row["week"]
+        days = eval(row["days"])
+
+        for day in days:
+            days_dict["week"].append(week)
+            days_dict["day"].append(day)
+            days_dict["total_distance"].append(days[day]["total_distance"])
+            days_dict["hard_pace"].append(days[day]["hard_pace"])
+
+    return days_dict
 
 df_week = pd.DataFrame(map(dict, get_week_data()))
-df_runner = pd.DataFrame(map(dict, get_runner_data()))
-df_activity = pd.DataFrame(map(dict, get_activity_data()))
+df_days = pd.DataFrame(get_days_day(get_week_data()))
+
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 app.layout = dbc.Container([
@@ -63,14 +66,16 @@ app.layout = dbc.Container([
     dbc.Row([
         dbc.Col([
             dbc.CardBody([
-                html.H4("Place holder 1", className="card-title"),
-                dcc.Graph(figure=px.line(df_week, x="week", y="hard_pace",  title="Session Pace"))
+                html.H4("Daily Mileage", className="card-title"),
+                dcc.Dropdown(sorted(df_days["week"].unique(), reverse=True), sorted(df_days["week"].unique(), reverse=True)[0], id="days_graph_item"),
+                dcc.Graph(id="days_graph")
             ])
         ], width=6), 
         dbc.Col([
             dbc.CardBody([
-                html.H4("Place holder 2", className="card-title"),
-                dcc.Graph(figure=px.line(df_week, x="week", y="hard_pace",  title="Session Pace"))
+                html.H4("Daily Mileage", className="card-title"),
+                dcc.Dropdown(sorted(df_days["week"].unique(), reverse=True), sorted(df_days["week"].unique(), reverse=True)[0], id="daily_pace_graph_item"),
+                dcc.Graph(id="daily_pace_graph")
             ])
         ], width=6)
     ])
@@ -91,6 +96,24 @@ def mileage_graph(col_chosen):
 )
 def pace_graph(col_chosen):
     fig = px.line(df_week, x="week", y=col_chosen,  title="Pace Trend")
+    return fig
+
+@callback(
+    Output(component_id='days_graph', component_property='figure'),
+    Input(component_id='days_graph_item', component_property='value')
+)
+def days_graph(col_week):
+    filtered_df = df_days[df_days['week'] == col_week]
+    fig = px.pie(filtered_df, values="total_distance", names="day",  title="Pace Trend")
+    return fig
+
+@callback(
+    Output(component_id='daily_pace_graph', component_property='figure'),
+    Input(component_id='daily_pace_graph_item', component_property='value')
+)
+def daily_pace_graph(col_week):
+    filtered_df = df_days[(df_days['week'] == col_week) & (df_days['hard_pace'] > 0)]
+    fig = px.line(filtered_df, x="day", y="hard_pace",  title="Daily Session Pace Trend")
     return fig
 
 if __name__ == '__main__':

@@ -121,7 +121,7 @@ class Week:
                   {self.run_count},
                   '{json.dumps(self.days)}',
                   {self.hard_time},
-                  {self.easy_pace,},
+                  {self.easy_pace},
                   {self.easy_time})
                   """)
         conn.commit()
