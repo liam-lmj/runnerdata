@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Mileage Charts
+{% endblock %}
+
+{% block body %}
+ 
+    <table>
+    <tr>
+        <th>Week</th>
+        <th>Monday</th>
+        <th>Tuesday</th>
+        <th>Tuesday</th>
+        <th>Wednesday</th>
+        <th>Thursday</th>
+        <th>Friday</th>
+        <th>Saturday</th>
+        <th>Sunday</th>
+        <th>Total</th>
+    </tr>
+
+    {% for week in weekly_mileage %}
+        <tr>
+            <th>{{ week.week }}</th> 
+            <td>{{ week.Monday }}</td>
+            <td>{{ week.Tuesday }}</td>
+            <td>{{ week.Wednesday }}</td>
+            <td>{{ week.Thursday }}</td>
+            <td>{{ week.Friday }}</td>
+            <td>{{ week.Saturday }}</td>
+            <td>{{ week.Sunday }}</td>
+            <td>{{ week.total_mileage }}</td>
+        </tr>
+    {% endfor %}
+
+    </table> 
+
+{% endblock %}
