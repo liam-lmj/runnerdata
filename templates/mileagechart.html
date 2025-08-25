@@ -6,34 +6,24 @@
 
 {% block body %}
  
-    <table>
-    <tr>
-        <th>Week</th>
-        <th>Monday</th>
-        <th>Tuesday</th>
-        <th>Tuesday</th>
-        <th>Wednesday</th>
-        <th>Thursday</th>
-        <th>Friday</th>
-        <th>Saturday</th>
-        <th>Sunday</th>
-        <th>Total</th>
-    </tr>
-
+    <table class="card-table">
     {% for week in weekly_mileage %}
         <tr>
             <th>{{ week.week }}</th> 
-            <td>{{ week.Monday }}</td>
-            <td>{{ week.Tuesday }}</td>
-            <td>{{ week.Wednesday }}</td>
-            <td>{{ week.Thursday }}</td>
-            <td>{{ week.Friday }}</td>
-            <td>{{ week.Saturday }}</td>
-            <td>{{ week.Sunday }}</td>
-            <td>{{ week.total_mileage }}</td>
+            {% for day, data in week.items() %}
+                {% if not loop.first %}
+                <td>
+                    <div class="center-text">{{ day }}</div>
+                    Easy distance: {{ data.easy }}<br>
+                    Hard distance: {{ data.hard }}<br>
+                    Total distance: {{ data.total }}<br>
+                    Easy pace: {{ data.easy_pace }}<br>
+                    Hard pace: {{ data.hard_pace }}<br>
+                </td>
+                {% endif %}
+            {% endfor %}
         </tr>
     {% endfor %}
-
     </table> 
 
 {% endblock %}

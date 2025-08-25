@@ -1,0 +1,32 @@
+.center-text
+{
+    text-align: center;
+    font-weight: bold;
+}
+
+.card-table
+{
+    width: 100%;
+}
+
+.card-table tr
+{
+    display: flex; 
+    background: white;
+    padding: 0.5rem;
+}
+
+.card-table td 
+{
+    flex: 1;             
+    background: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.25rem 0.5rem lightgrey;
+    transition: transform 0.2s ease;
+}
+
+.card-table td:hover 
+{
+    transform: translateY(0.25rem);
+}

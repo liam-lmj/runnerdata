@@ -7,14 +7,32 @@ init_dashboard(app)
 
 #test data
 #TODO pull data from database
-#TODO styling for table etc
 
 WEEKLY_MILEAGE = [
-    {"week": "week1", "Monday": 10, "Tuesday": 10, "Wednesday": 10, "Thursday": 10,
-     "Friday": 12, "Saturday": 12, "Sunday": 14, "total_mileage": 80},
-    {"week": "week2", "Monday": 10, "Tuesday": 10, "Wednesday": 10, "Thursday": 10,
-     "Friday": 12, "Saturday": 12, "Sunday": 14, "total_mileage": 80}
+    {
+        "week": "week1",
+        "Monday": {"easy": 10, "hard": 10, "total": 20, "easy_pace": 8, "hard_pace": 5},
+        "Tuesday": {"easy": 10, "hard": 0, "total": 10, "easy_pace": 8, "hard_pace": 0},
+        "Wednesday": {"easy": 10, "hard": 0, "total": 10, "easy_pace": 8, "hard_pace": 0},
+        "Thursday": {"easy": 10, "hard": 0, "total": 10, "easy_pace": 8, "hard_pace": 0},
+        "Friday": {"easy": 12, "hard": 0, "total": 12, "easy_pace": 8, "hard_pace": 0},
+        "Saturday": {"easy": 12, "hard": 0, "total": 12, "easy_pace": 8, "hard_pace": 0},
+        "Sunday": {"easy": 14, "hard": 0, "total": 14, "easy_pace": 8, "hard_pace": 0},
+        "Total": {"easy": 14, "hard": 0, "total": 14, "easy_pace": 8, "hard_pace": 0}
+    },
+    {
+        "week": "week2",
+        "Monday": {"easy": 10, "hard": 10, "total": 20, "easy_pace": 8, "hard_pace": 5},
+        "Tuesday": {"easy": 10, "hard": 0, "total": 10, "easy_pace": 8, "hard_pace": 0},
+        "Wednesday": {"easy": 10, "hard": 0, "total": 10, "easy_pace": 8, "hard_pace": 0},
+        "Thursday": {"easy": 10, "hard": 0, "total": 10, "easy_pace": 8, "hard_pace": 0},
+        "Friday": {"easy": 12, "hard": 0, "total": 12, "easy_pace": 8, "hard_pace": 0},
+        "Saturday": {"easy": 12, "hard": 0, "total": 12, "easy_pace": 8, "hard_pace": 0},
+        "Sunday": {"easy": 14, "hard": 0, "total": 14, "easy_pace": 8, "hard_pace": 0},
+        "Total": {"easy": 14, "hard": 0, "total": 14, "easy_pace": 8, "hard_pace": 0}
+    }
 ]
+
 
 @app.route("/")
 def index():
