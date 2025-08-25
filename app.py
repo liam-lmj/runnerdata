@@ -1,9 +1,15 @@
+import pandas as pd 
 from flask import Flask, render_template, request
 from dashboard import init_dashboard
+from database import get_week_data, get_days_day
 
 app = Flask(__name__)
 
-init_dashboard(app)
+week_data = get_week_data()
+df_week = pd.DataFrame(map(dict, week_data))
+df_days = pd.DataFrame(get_days_day(week_data))
+
+init_dashboard(app, df_week, df_days)
 
 #test data
 #TODO pull data from database
