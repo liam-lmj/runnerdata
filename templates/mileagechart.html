@@ -11,13 +11,12 @@
         <tr>
             <th>{{ week.week }}</th> 
             {% for day, data in week.items() %}
-                {% if not loop.first %}
+                {% if not loop.last %}
                 <td>
                     <div class="center-text">{{ day }}</div>
-                    Easy distance: {{ data.easy }}<br>
-                    Hard distance: {{ data.hard }}<br>
-                    Total distance: {{ data.total }}<br>
-                    Easy pace: {{ data.easy_pace }}<br>
+                    Easy distance: {{ '%0.2f'| format(data.easy_distance/1609|float) }}<br> 
+                    Hard distance: {{ '%0.2f'| format(data.hard_distance/1609|float) }}<br>
+                    Total distance: {{ '%0.2f'| format(data.total_distance/1609|float) }}<br>
                     Hard pace: {{ data.hard_pace }}<br>
                 </td>
                 {% endif %}

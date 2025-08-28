@@ -1,7 +1,6 @@
 import sqlite3
 
 #TODO need to add user to the sql calls to support multiple data in the future
-
 def get_week_data():
     conn = sqlite3.connect('runner.db')
     conn.row_factory = sqlite3.Row  
@@ -30,6 +29,3 @@ def get_days_day(weeks):
             days_dict["hard_pace"].append(days[day]["hard_pace"])
 
     return days_dict
-
-week_data = get_week_data()
-get_days_day(week_data)

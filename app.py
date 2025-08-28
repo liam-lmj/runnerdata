@@ -2,6 +2,7 @@ import pandas as pd
 from flask import Flask, render_template, request
 from dashboard import init_dashboard
 from database import get_week_data, get_days_day
+from constants import days_in_week, week_order, days_of_week
 
 app = Flask(__name__)
 
@@ -11,34 +12,38 @@ df_days = pd.DataFrame(get_days_day(week_data))
 
 init_dashboard(app, df_week, df_days)
 
-#test data
-#TODO pull data from database
+weekly_mileage = []
 
-WEEKLY_MILEAGE = [
-    {
-        "week": "week1",
-        "Monday": {"easy": 10, "hard": 10, "total": 20, "easy_pace": 8, "hard_pace": 5},
-        "Tuesday": {"easy": 10, "hard": 0, "total": 10, "easy_pace": 8, "hard_pace": 0},
-        "Wednesday": {"easy": 10, "hard": 0, "total": 10, "easy_pace": 8, "hard_pace": 0},
-        "Thursday": {"easy": 10, "hard": 0, "total": 10, "easy_pace": 8, "hard_pace": 0},
-        "Friday": {"easy": 12, "hard": 0, "total": 12, "easy_pace": 8, "hard_pace": 0},
-        "Saturday": {"easy": 12, "hard": 0, "total": 12, "easy_pace": 8, "hard_pace": 0},
-        "Sunday": {"easy": 14, "hard": 0, "total": 14, "easy_pace": 8, "hard_pace": 0},
-        "Total": {"easy": 14, "hard": 0, "total": 14, "easy_pace": 8, "hard_pace": 0}
-    },
-    {
-        "week": "week2",
-        "Monday": {"easy": 10, "hard": 10, "total": 20, "easy_pace": 8, "hard_pace": 5},
-        "Tuesday": {"easy": 10, "hard": 0, "total": 10, "easy_pace": 8, "hard_pace": 0},
-        "Wednesday": {"easy": 10, "hard": 0, "total": 10, "easy_pace": 8, "hard_pace": 0},
-        "Thursday": {"easy": 10, "hard": 0, "total": 10, "easy_pace": 8, "hard_pace": 0},
-        "Friday": {"easy": 12, "hard": 0, "total": 12, "easy_pace": 8, "hard_pace": 0},
-        "Saturday": {"easy": 12, "hard": 0, "total": 12, "easy_pace": 8, "hard_pace": 0},
-        "Sunday": {"easy": 14, "hard": 0, "total": 14, "easy_pace": 8, "hard_pace": 0},
-        "Total": {"easy": 14, "hard": 0, "total": 14, "easy_pace": 8, "hard_pace": 0}
-    }
-]
+for week in week_data:
+    days = week["days"]
+    days_dict = eval(days)
+    sorted_dict = {}
+    total_distance = 0
+    easy_distance = 0
+    hard_distance = 0
+    hard_time = 0 
+    hard_pace = 0
+    for day in week_order:
+        if day in days_dict:
+            sorted_dict[days_of_week[day]] = days_dict[day]
+            total_distance += days_dict[day]["total_distance"]
+            easy_distance += days_dict[day]["easy_distance"]
+            hard_distance += days_dict[day]["hard_distance"]
+            hard_time += days_dict[day]["hard_distance"] * days_dict[day]["hard_pace"]
 
+    if hard_distance > 0:
+        hard_pace = round((hard_time / hard_distance), 2)
+    
+    sorted_dict["Total"] = {"total_distance": total_distance, 
+                            "easy_distance": easy_distance,
+                            "hard_distance": hard_distance,
+                            "hard_pace": hard_pace}
+
+    if len(days_dict) == days_in_week:
+        sorted_dict["week"] = week["week"]
+        weekly_mileage.append(sorted_dict)
+
+weekly_mileage.reverse()
 
 @app.route("/")
 def index():
@@ -46,7 +51,7 @@ def index():
 
 @app.route("/mileage")
 def mileage():
-    return render_template("mileagechart.html", weekly_mileage=WEEKLY_MILEAGE)
+    return render_template("mileagechart.html", weekly_mileage=weekly_mileage)
 
 if __name__ == "__main__":
     app.run(debug=True)
