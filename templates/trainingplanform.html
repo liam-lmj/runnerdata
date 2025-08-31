@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Training Plan Form
+{% endblock %}
+
+{% block body %}
+    <h1>Training Plan Form</h1>
+    <form>
+        <select id="Week" name="Week">
+            {% for week in next_ten_weeks %}
+                <option value="{{ week }}">{{ week }}</option>
+            {% endfor %}
+        </select>
+
+        <br><br>
+
+        {% for day in days_of_week.values() %}
+            {{ day }}<br>
+            <label for="fname">Easy Distance:</label>
+            <input type="number" id="easy_distance" name="easy_distance" value="0.0" min="0.0" step="0.1"><br>
+            <label for="lname">Hard Distance:</label>
+            <input type="number" id="hard_distance" name="hard_distance" value="0.0" min="0.0" step="0.1"><br><br>
+        {% endfor %}
+
+        <input type="submit" value="Create Plan">
+    </form> 
+{% endblock %}

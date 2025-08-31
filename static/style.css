@@ -1,3 +1,8 @@
+body 
+{
+  background-color: #f9fafb;
+}
+
 .center-text
 {
     text-align: center;
@@ -12,14 +17,14 @@
 .card-table tr
 {
     display: flex; 
-    background: white;
+    background: #f9fafb;
     padding: 0.5rem;
 }
 
 .card-table td 
 {
     flex: 1;             
-    background: white;
+    background: #f0f6fc;
     padding: 1.5rem;
     border-radius: 0.5rem;
     box-shadow: 0 0.25rem 0.5rem lightgrey;

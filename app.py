@@ -45,13 +45,21 @@ for week in week_data:
 
 weekly_mileage.reverse()
 
+#TODO auto calc next ten weeks rather than hardcode
+#TODO add action on form submission
+next_ten_weeks = ["31-2025", "32-2025", "33-2025", "34-2025", "35-2025"]
+
 @app.route("/")
 def index():
     return render_template("index.html")
 
-@app.route("/mileage")
+@app.route("/mileagelog")
 def mileage():
     return render_template("mileagechart.html", weekly_mileage=weekly_mileage)
+
+@app.route("/trainingform")
+def trainingplanform():
+    return render_template("trainingplanform.html", days_of_week=days_of_week, next_ten_weeks=next_ten_weeks)
 
 if __name__ == "__main__":
     app.run(debug=True)
