@@ -1,5 +1,11 @@
 import sqlite3
 
+def dict_factory(cursor, row): 
+    d = {}
+    for idx, col in enumerate(cursor.description):
+        d[col[0]] = row[idx]
+    return d
+
 #TODO need to add user to the sql calls to support multiple data in the future
 def get_week_data():
     conn = sqlite3.connect('runner.db')
@@ -29,3 +35,16 @@ def get_days_day(weeks):
             days_dict["hard_pace"].append(days[day]["hard_pace"])
 
     return days_dict
+
+def get_plan_data():
+    conn = sqlite3.connect('runner.db')
+    conn.row_factory = dict_factory  
+    c = conn.cursor()
+    c.execute("SELECT * FROM plan ORDER BY week ASC")
+    plans = c.fetchall()
+    conn.close()
+    for plan in plans:
+        for key, value in plan.items():
+            if key != "week":
+                plan[key] = eval(value)
+    return plans

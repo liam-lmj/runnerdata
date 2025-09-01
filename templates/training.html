@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Training Plans
+{% endblock %}
+
+{% block body %}
+    <h1>Training Plans</h1>
+
+    <table class="card-table">
+    {% for plan in training_plans %}
+        <tr>
+            <th>{{ plan.week }}</th> 
+            {% for key, value in plan.items() if key != "week" %}
+                {%set value_dict = value|tojson %}
+                <td>
+                    <div class="center-text">{{ key|capitalize }}</div>
+                    Easy distance: {{ value.easy_distance }}<br> 
+                    Hard distance: {{ value.hard_distance }}<br>
+                    Total distance: {{ value.total_distance }}<br>
+                </td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    </table> 
+
+{% endblock %}

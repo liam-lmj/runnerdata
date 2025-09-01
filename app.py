@@ -1,7 +1,9 @@
 import pandas as pd 
+from plan import Plan
+from datetime import datetime, timedelta
 from flask import Flask, render_template, request
 from dashboard import init_dashboard
-from database import get_week_data, get_days_day
+from database import get_week_data, get_days_day, get_plan_data
 from constants import days_in_week, week_order, days_of_week
 
 app = Flask(__name__)
@@ -13,6 +15,14 @@ df_days = pd.DataFrame(get_days_day(week_data))
 init_dashboard(app, df_week, df_days)
 
 weekly_mileage = []
+training_plans = []
+next_five_weeks = []
+
+date = datetime.now()
+for i in range(1,6):
+    date += timedelta(days=7)
+    week_year = date.strftime("%W-%Y")
+    next_five_weeks.append(week_year)
 
 for week in week_data:
     days = week["days"]
@@ -45,10 +55,6 @@ for week in week_data:
 
 weekly_mileage.reverse()
 
-#TODO auto calc next ten weeks rather than hardcode
-#TODO add action on form submission
-next_ten_weeks = ["31-2025", "32-2025", "33-2025", "34-2025", "35-2025"]
-
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -57,9 +63,20 @@ def index():
 def mileage():
     return render_template("mileagechart.html", weekly_mileage=weekly_mileage)
 
-@app.route("/trainingform")
+@app.route("/trainingform", methods=["GET", "POST"])
 def trainingplanform():
-    return render_template("trainingplanform.html", days_of_week=days_of_week, next_ten_weeks=next_ten_weeks)
+    return render_template("trainingplanform.html", days_of_week=days_of_week, next_five_weeks=next_five_weeks)
+
+@app.route("/training", methods=["GET", "POST"])
+def trainingplan():
+    if request.method == "POST": 
+        plan = Plan(request.form.to_dict())
+        if plan.plan_exists():
+            plan.update_plan()
+        else:
+            plan.insert_plan()      
+    training_plans = get_plan_data()
+    return render_template("training.html", training_plans=training_plans)
 
 if __name__ == "__main__":
     app.run(debug=True)
