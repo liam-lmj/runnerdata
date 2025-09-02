@@ -7,21 +7,68 @@
 {% block body %}
     <h1>Training Plans</h1>
 
-    <table class="card-table">
-    {% for plan in training_plans %}
-        <tr>
-            <th>{{ plan.week }}</th> 
-            {% for key, value in plan.items() if key != "week" %}
-                {%set value_dict = value|tojson %}
-                <td>
-                    <div class="center-text">{{ key|capitalize }}</div>
-                    Easy distance: {{ value.easy_distance }}<br> 
-                    Hard distance: {{ value.hard_distance }}<br>
-                    Total distance: {{ value.total_distance }}<br>
-                </td>
-            {% endfor %}
-        </tr>
-    {% endfor %}
+    <select id="trainingPlanSelection" name="trainingPlanSelection">
+            <option value="All">All</option>
+            <option value="Current">Current</option>
+            <option value="Previous">Previous</option>            
+    </select>
+
+    <table id="trainingTable" class="card-table">
     </table> 
+
+    <script>
+        const trainingPlans = {{ training_plans | tojson }};
+        const table = document.getElementById("trainingTable");
+        const selection = document.getElementById("trainingPlanSelection");
+
+        function renderTable() {
+            const currentSelection = selection.value;
+
+                table.innerHTML = "";
+
+                const filteredPlans = trainingPlans.filter(plan => {
+                    if (currentSelection === "All") return true; 
+                    const weekYear = plan.week;
+                    const [week, year] = weekYear.split("-").map(Number);
+                    const date = new Date(year, 0, 1 + (week - 1) * 7);
+                    console.log("new");
+                    console.log(weekYear);
+                    console.log(date);
+                    const now = new Date();
+                    console.log(now);
+                    console.log("end");
+                    if (currentSelection == "Current" && date >= now){
+                        return true
+                    } 
+                    if (currentSelection == "Previous" && date < now){
+                        return true
+                    } 
+                    return false;    
+                });
+                
+                filteredPlans.forEach(plan => {
+                    const week = plan.week 
+                    let row = "<tr><th>" + week + "</th>";
+
+                    for (const [key, value] of Object.entries(plan)) {
+                        if (key != "week") {
+                            const day = key.charAt(0).toUpperCase() + key.slice(1);
+                            row += "<td>";
+                            row += "<div class='center-text'>" + day + "</div>";
+                            row += "Easy distance: " + value["easy_distance"] + "<br>";
+                            row += "Hard distance: " + value["hard_distance"] + "<br>";
+                            row += "Total distance: " + (parseFloat(value["hard_distance"]) + parseFloat(value["easy_distance"])) + "<br>";
+                            row += "</td>"
+                        }
+                    }
+
+                    table.innerHTML += row;
+            });
+        }
+
+        renderTable();
+
+        selection.addEventListener("change", renderTable);
+    </script>
 
 {% endblock %}
