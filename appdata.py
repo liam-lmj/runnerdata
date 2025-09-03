@@ -1,4 +1,10 @@
 from datetime import datetime, timedelta
+from constants import days_in_week, week_order, days_of_week
+
+def current_week_year():
+    now = datetime.now()
+    week_year = now.strftime("%W-%Y")
+    return week_year
 
 def get_next_five_weeks():
     next_five_weeks = []
