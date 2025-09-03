@@ -3,7 +3,7 @@ from plan import Plan
 from appdata import get_next_five_weeks, get_weekly_mileage, current_week_year
 from flask import Flask, render_template, request
 from dashboard import init_dashboard
-from database import get_week_data, get_days_day, get_plan_data
+from database import get_week_data, get_days_day, get_plan_data, get_running_gear
 from constants import days_of_week
 
 app = Flask(__name__)
@@ -16,6 +16,8 @@ df_days = pd.DataFrame(get_days_day(week_data))
 weekly_mileage = get_weekly_mileage(week_data)
 next_five_weeks = get_next_five_weeks()
 
+running_gear = get_running_gear()
+
 init_dashboard(app, df_week, df_days)
 
 @app.route("/")
@@ -25,6 +27,10 @@ def index():
 @app.route("/mileagelog")
 def mileage():
     return render_template("mileagechart.html", weekly_mileage=weekly_mileage)
+
+@app.route("/gear")
+def gear():
+    return render_template("gear.html", running_gear=running_gear)
 
 @app.route("/trainingform", methods=["GET", "POST"])
 def trainingplanform():

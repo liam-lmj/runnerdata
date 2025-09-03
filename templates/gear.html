@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Running Gear
+{% endblock %}
+
+{% block body %}
+    <h1>Running Gear</h1>
+
+    <select id="gearSelection" name="gearSelection">
+            <option value="Active">Active</option>
+            <option value="Retired">Retired</option>  
+            <option value="All">All</option>
+    </select>
+
+    <table id="gearTable" class="card-table"></table>
+
+    <script>
+        const runningGearData = {{ running_gear | tojson }};
+    </script>
+    <script src="./static/gear.js"></script>
+    
+{% endblock %}

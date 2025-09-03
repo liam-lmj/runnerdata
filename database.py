@@ -48,3 +48,12 @@ def get_plan_data():
             if key != "week":
                 plan[key] = eval(value)
     return plans
+
+def get_running_gear():
+    conn = sqlite3.connect('runner.db')
+    conn.row_factory = dict_factory  
+    c = conn.cursor()
+    c.execute("SELECT * FROM gear")
+    gear = c.fetchall()
+    conn.close()
+    return gear
