@@ -33,7 +33,7 @@ class Gear:
     def update_gear(self):
         conn = sqlite3.connect('runner.db')
         c = conn.cursor()
-        c.execute(f"""UPDATE plan SET 
+        c.execute(f"""UPDATE gear SET 
                     name = '{self.name}', 
                     runner = '{self.runner}', 
                     distance = {self.distance}, 

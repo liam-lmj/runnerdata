@@ -35,3 +35,7 @@ body
 {
     transform: translateY(0.25rem);
 }
+
+.form-popup {
+  display: none;
+}

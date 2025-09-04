@@ -15,9 +15,31 @@
 
     <table id="gearTable" class="card-table"></table>
 
+    <div id="popup" class="form-popup">
+        <form class="form-container">
+            <h1>Update Trainer</h1>
+
+            <label for="Add Miles"><b>Add Miles</b></label>
+            <input type="number" placeholder="0" id = "addMiles" name="addMiles">
+            <br>
+
+            <label for="Remove Miles"><b>Remove Miles</b></label>
+            <input type="number" placeholder="0" id = "removeMiles" name = "removeMiles" >
+            <br>
+
+            <button type="reset" onclick="updateAndClose(document.getElementById('addMiles').value, 
+                                                        document.getElementById('removeMiles').value,
+                                                        document.getElementById('popup').dataset.gear_id)">Update</button>
+            <button type="reset" onclick="retiredAndClose()">Retire</button>
+            <button type="reset" onclick="closeForm()">Cancel</button>
+
+        </form>
+    </div>
+
     <script>
         const runningGearData = {{ running_gear | tojson }};
     </script>
+
     <script src="./static/gear.js"></script>
     
 {% endblock %}

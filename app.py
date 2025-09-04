@@ -1,7 +1,8 @@
 import pandas as pd 
 from plan import Plan
+from gear import Gear
 from appdata import get_next_five_weeks, get_weekly_mileage, current_week_year
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from dashboard import init_dashboard
 from database import get_week_data, get_days_day, get_plan_data, get_running_gear
 from constants import days_of_week
@@ -16,7 +17,7 @@ df_days = pd.DataFrame(get_days_day(week_data))
 weekly_mileage = get_weekly_mileage(week_data)
 next_five_weeks = get_next_five_weeks()
 
-running_gear = get_running_gear()
+#running_gear = get_running_gear()
 
 init_dashboard(app, df_week, df_days)
 
@@ -28,8 +29,22 @@ def index():
 def mileage():
     return render_template("mileagechart.html", weekly_mileage=weekly_mileage)
 
-@app.route("/gear")
+@app.route("/gear", methods=["GET", "POST"])
 def gear():
+    running_gear = get_running_gear()
+    if request.method == "POST":
+        gear_updates = request.json
+        total_new_miles = gear_updates["totalNewMiles"]
+        gear_id = gear_updates["gear_id"]
+        gear_data = running_gear[int(gear_id) - 1] #gear_id starts at 1 in database and list is 0 indexed
+        gear = Gear(gear_data["name"], 
+                    gear_data["runner"], 
+                    gear_data["distance"] + total_new_miles, 
+                    gear_data["active"],
+                    gear_data["default_type"],
+                    gear_id=gear_data["gear_id"])
+        gear.update_gear()
+        return jsonify({"success": True})
     return render_template("gear.html", running_gear=running_gear)
 
 @app.route("/trainingform", methods=["GET", "POST"])
