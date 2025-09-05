@@ -3,7 +3,35 @@ const selection = document.getElementById("gearSelection");
 const activeSelection = document.getElementById("activeSelection");
 const defaultTypeSelection = document.getElementById("default_type");
 const popup = document.getElementById("popup");
+const popupAdd = document.getElementById("popup_add");
 const gear = runningGearData;
+
+function openAddForm() {
+  popupAdd.style.display = "block";
+}
+
+function closeAddForm() {
+  popupAdd.style.display = "none";
+}
+
+function addAndClose(miles, default_type, trainer, type = "Add") {
+    fetch('/gear', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ miles, default_type, trainer, type })
+    })
+    .then(response => response.json())
+    .then(data => {
+        //const index = runningGearData.findIndex(g => g.gear_id == gear_id);
+        //if (index !== -1) {
+        //    runningGearData[index].distance += totalNewMiles;
+        //    runningGearData[index].active = active;
+        //    runningGearData[index].default_type = default_type;
+        //}
+        renderTable();  
+        closeForm();    
+    })
+}
 
 function openForm(gear_id, active, runType) {
   popup.style.display = "block";
@@ -16,12 +44,12 @@ function closeForm() {
   popup.style.display = "none";
 }
 
-function updateAndClose(add, remove, active, default_type, gear_id) {
+function updateAndClose(add, remove, active, default_type, gear_id, type = "Update") {
     const totalNewMiles = Number(add) - Number(remove);
     fetch('/gear', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ totalNewMiles, gear_id, active, default_type })
+        body: JSON.stringify({ totalNewMiles, gear_id, active, default_type, type })
     })
     .then(response => response.json())
     .then(data => {

@@ -34,21 +34,35 @@ def gear():
     running_gear = get_running_gear()
     if request.method == "POST":
         gear_updates = request.json
-        total_new_miles = gear_updates["totalNewMiles"]
-        gear_id = gear_updates["gear_id"]
-        gear_data = running_gear[int(gear_id) - 1] #gear_id starts at 1 in database and list is 0 indexed
+        print(gear_updates)
+        if gear_updates["type"] == "Update":
+            total_new_miles = gear_updates["totalNewMiles"]
+            gear_id = gear_updates["gear_id"]
+            gear_data = running_gear[int(gear_id) - 1] #gear_id starts at 1 in database and list is 0 indexed
 
-        deafultType = gear_updates["default_type"] if gear_updates["default_type"] in run_types else None
-        active = gear_updates["active"]
+            deafultType = gear_updates["default_type"] if gear_updates["default_type"] in run_types else None
+            active = gear_updates["active"]
 
-        gear = Gear(gear_data["name"], 
-                    gear_data["runner"], 
-                    gear_data["distance"] + total_new_miles, 
-                    active,
-                    deafultType,
-                    gear_id=gear_data["gear_id"])
-        gear.update_gear()
+            gear = Gear(gear_data["name"], 
+                        gear_data["runner"], 
+                        gear_data["distance"] + total_new_miles, 
+                        active,
+                        deafultType,
+                        gear_id=gear_data["gear_id"])
+            gear.update_gear()
+        else:
+            gear = Gear(gear_updates["trainer"],
+                        "34892346",
+                        gear_updates["miles"],
+                        "Active",
+                        gear_updates["default_type"])
+            print(gear)
+
+            gear.insert_gear()
+
         return jsonify({"success": True})
+    
+
     return render_template("gear.html", running_gear=running_gear)
 
 @app.route("/trainingform", methods=["GET", "POST"])

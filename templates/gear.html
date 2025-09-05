@@ -12,7 +12,7 @@
             <option value="Retired">Retired</option>  
             <option value="All">All</option>
     </select>
-
+    <button onclick="openAddForm()">Add Trainer</button>
     <table id="gearTable" class="card-table"></table>
 
     <div id="popup" class="form-popup">
@@ -48,6 +48,34 @@
                                                         document.getElementById('default_type').value,
                                                         document.getElementById('popup').dataset.gear_id)">Update</button>
             <button type="reset" onclick="closeForm()">Cancel</button>
+
+        </form>
+    </div>
+
+    <div id="popup_add" class="form-popup">
+        <form class="form-container">
+            <h1>Add Trainer</h1>
+
+            <label for="Trainer"><b>Trainer</b></label>
+            <input type="text" placeholder="trainer" id = "trainer" name="trainer">
+            <br>
+
+            <label for="Existing Miles"><b>Existing Miles</b></label>
+            <input type="number" placeholder="0" id = "existingMiles" name="existingMiles">
+            <br>
+
+            <label for="Default Type Add"><b>Default Run Type</b></label>
+            <select id="default_type_add" name="default_type_add">
+                <option value="Easy">Easy</option>
+                <option value="Hard">Hard</option>
+                <option value="None">None</option>
+            </select> 
+            <br>
+
+            <button type="reset" onclick="addAndClose(document.getElementById('existingMiles').value, 
+                                                        document.getElementById('default_type_add').value,
+                                                        document.getElementById('trainer').value)">Add</button>
+            <button type="reset" onclick="closeAddForm()">Cancel</button>
 
         </form>
     </div>
