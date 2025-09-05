@@ -5,7 +5,7 @@ from appdata import get_next_five_weeks, get_weekly_mileage, current_week_year
 from flask import Flask, render_template, request, jsonify
 from dashboard import init_dashboard
 from database import get_week_data, get_days_day, get_plan_data, get_running_gear
-from constants import days_of_week
+from constants import days_of_week, run_types
 
 app = Flask(__name__)
 
@@ -37,11 +37,15 @@ def gear():
         total_new_miles = gear_updates["totalNewMiles"]
         gear_id = gear_updates["gear_id"]
         gear_data = running_gear[int(gear_id) - 1] #gear_id starts at 1 in database and list is 0 indexed
+
+        deafultType = gear_updates["default_type"] if gear_updates["default_type"] in run_types else None
+        active = gear_updates["active"]
+
         gear = Gear(gear_data["name"], 
                     gear_data["runner"], 
                     gear_data["distance"] + total_new_miles, 
-                    gear_data["active"],
-                    gear_data["default_type"],
+                    active,
+                    deafultType,
                     gear_id=gear_data["gear_id"])
         gear.update_gear()
         return jsonify({"success": True})

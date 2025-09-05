@@ -1,37 +1,39 @@
 const table = document.getElementById("gearTable");
 const selection = document.getElementById("gearSelection");
+const activeSelection = document.getElementById("activeSelection");
+const defaultTypeSelection = document.getElementById("default_type");
 const popup = document.getElementById("popup");
 const gear = runningGearData;
 
-function openForm(gear_id) {
+function openForm(gear_id, active, runType) {
   popup.style.display = "block";
-  popup.dataset.gear_id = gear_id
+  popup.dataset.gear_id = gear_id;
+  activeSelection.value = active;
+  defaultTypeSelection.value = runType;
 }
 
 function closeForm() {
   popup.style.display = "none";
 }
 
-function updateAndClose(add, remove, gear_id) {
-    const totalNewMiles = add - remove;
+function updateAndClose(add, remove, active, default_type, gear_id) {
+    const totalNewMiles = Number(add) - Number(remove);
     fetch('/gear', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ totalNewMiles, gear_id })
+        body: JSON.stringify({ totalNewMiles, gear_id, active, default_type })
     })
     .then(response => response.json())
     .then(data => {
         const index = runningGearData.findIndex(g => g.gear_id == gear_id);
         if (index !== -1) {
             runningGearData[index].distance += totalNewMiles;
+            runningGearData[index].active = active;
+            runningGearData[index].default_type = default_type;
         }
         renderTable();  
         closeForm();    
     })
-}
-
-function retiredAndClose() {
-    closeForm();
 }
 
 function renderTable() {
@@ -55,19 +57,21 @@ function renderTable() {
             const row = document.createElement("tr");
             const cell = document.createElement("td");
             const button = document.createElement("button");
+            const runType = key.default_type === null ? "None" : key.default_type
+             
             cell.innerHTML = `
                                 Trainer: ${key.name}<br>
                                 Distance: ${key.distance}<br>
                                 Active: ${key.active}<br>
-                                Default Run Type: ${key.default_type}<br>
+                                Default Run Type: ${runType}<br>
                             `;
             button.innerHTML = 'Update Trainer';
 
-            button.addEventListener("click", function() {openForm(key.gear_id);});
+            button.addEventListener("click", function() {openForm(key.gear_id, key.active, runType);});
 
+            cell.appendChild(button);
             row.appendChild(cell);
             table.appendChild(row);
-            table.appendChild(button)
         }
 }
 

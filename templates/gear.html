@@ -27,10 +27,26 @@
             <input type="number" placeholder="0" id = "removeMiles" name = "removeMiles" >
             <br>
 
+            <label for="Active"><b>Active</b></label>
+            <select id="activeSelection" name="activeSelection">
+                <option value="Active">Active</option>
+                <option value="Retired">Retired</option>
+            </select> 
+            <br>
+
+            <label for="Default Type"><b>Default Run Type</b></label>
+            <select id="default_type" name="default_type">
+                <option value="Easy">Easy</option>
+                <option value="Hard">Hard</option>
+                <option value="None">None</option>
+            </select> 
+            <br>
+
             <button type="reset" onclick="updateAndClose(document.getElementById('addMiles').value, 
                                                         document.getElementById('removeMiles').value,
+                                                        document.getElementById('activeSelection').value,
+                                                        document.getElementById('default_type').value,
                                                         document.getElementById('popup').dataset.gear_id)">Update</button>
-            <button type="reset" onclick="retiredAndClose()">Retire</button>
             <button type="reset" onclick="closeForm()">Cancel</button>
 
         </form>

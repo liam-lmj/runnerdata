@@ -25,3 +25,4 @@ days_of_week  = {
     "6": "Saturday",
     "0": "Sunday"
 }
+run_types = ["Easy", "Hard"]
