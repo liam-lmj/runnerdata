@@ -9,6 +9,35 @@ body
     font-weight: bold;
 }
 
+.banner
+{
+    width: 100%;
+}
+
+.banner tr
+{
+    display: flex; 
+    background: #f9fafb;
+    padding: 0.5rem;
+}
+
+.banner td 
+{
+    text-align: center;
+    color: white;
+    flex: 1;             
+    background: black;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.25rem 0.5rem lightgrey;
+    transition: transform 0.2s ease;
+}
+
+.banner td:hover 
+{
+    transform: translateY(0.25rem);
+}
+
 .card-table
 {
     width: 100%;
@@ -18,7 +47,6 @@ body
 {
     display: flex; 
     background: #f9fafb;
-    padding: 0.5rem;
 }
 
 .card-table td 
