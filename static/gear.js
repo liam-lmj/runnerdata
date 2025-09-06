@@ -4,6 +4,7 @@ const activeSelection = document.getElementById("activeSelection");
 const defaultTypeSelection = document.getElementById("default_type");
 const popup = document.getElementById("popup");
 const popupAdd = document.getElementById("popup_add");
+const popupAddForm = document.getElementById("popup_add_form");
 const gear = runningGearData;
 
 function openAddForm() {
@@ -12,6 +13,20 @@ function openAddForm() {
 
 function closeAddForm() {
   popupAdd.style.display = "none";
+}
+
+function validateAdd() {
+  if (popupAddForm.checkValidity()) {
+    addAndClose(
+      document.getElementById("existingMiles").value,
+      document.getElementById("default_type_add").value,
+      document.getElementById("trainer").value
+    );
+    popupAddForm.reset();
+
+  } else {
+    popupAddForm.reportValidity(); 
+  }
 }
 
 function addAndClose(miles, default_type, trainer, type = "Add") {
@@ -29,7 +44,7 @@ function addAndClose(miles, default_type, trainer, type = "Add") {
         //    runningGearData[index].default_type = default_type;
         //}
         renderTable();  
-        closeForm();    
+        closeAddForm();    
     })
 }
 
@@ -54,6 +69,8 @@ function updateAndClose(add, remove, active, default_type, gear_id, type = "Upda
     .then(response => response.json())
     .then(data => {
         const index = runningGearData.findIndex(g => g.gear_id == gear_id);
+        console.log(runningGearData)
+        console.log(runningGearData[index])
         if (index !== -1) {
             runningGearData[index].distance += totalNewMiles;
             runningGearData[index].active = active;

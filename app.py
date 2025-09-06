@@ -42,7 +42,6 @@ def gear():
 
             deafultType = gear_updates["default_type"] if gear_updates["default_type"] in run_types else None
             active = gear_updates["active"]
-
             gear = Gear(gear_data["name"], 
                         gear_data["runner"], 
                         gear_data["distance"] + total_new_miles, 
@@ -53,7 +52,7 @@ def gear():
         else:
             gear = Gear(gear_updates["trainer"],
                         "34892346",
-                        gear_updates["miles"],
+                        float(gear_updates["miles"]),
                         "Active",
                         gear_updates["default_type"])
             print(gear)
