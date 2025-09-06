@@ -57,3 +57,12 @@ def get_running_gear():
     gear = c.fetchall()
     conn.close()
     return gear
+
+def get_gear_by_id(gear_id):
+    conn = sqlite3.connect('runner.db')
+    conn.row_factory = dict_factory
+    c = conn.cursor()
+    c.execute(f"SELECT * FROM gear WHERE gear_id = {gear_id}")
+    gear = c.fetchone()
+    conn.close()
+    return gear

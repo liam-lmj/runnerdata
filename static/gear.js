@@ -3,9 +3,9 @@ const selection = document.getElementById("gearSelection");
 const activeSelection = document.getElementById("activeSelection");
 const defaultTypeSelection = document.getElementById("default_type");
 const popup = document.getElementById("popup");
+const popupForm = document.getElementById("popup_form");
 const popupAdd = document.getElementById("popup_add");
 const popupAddForm = document.getElementById("popup_add_form");
-const gear = runningGearData;
 
 function openAddForm() {
   popupAdd.style.display = "block";
@@ -37,12 +37,16 @@ function addAndClose(miles, default_type, trainer, type = "Add") {
     })
     .then(response => response.json())
     .then(data => {
-        //const index = runningGearData.findIndex(g => g.gear_id == gear_id);
-        //if (index !== -1) {
-        //    runningGearData[index].distance += totalNewMiles;
-        //    runningGearData[index].active = active;
-        //    runningGearData[index].default_type = default_type;
-        //}
+        console.log(runningGearData)
+        console.log(data.gear_id)
+        new_trainer = {
+            name: trainer,
+            distance: miles,
+            active: "Active",
+            default_type: default_type,
+            gear_id: data.gear_id
+        }
+        runningGearData.push(new_trainer)
         renderTable();  
         closeAddForm();    
     })
@@ -69,10 +73,9 @@ function updateAndClose(add, remove, active, default_type, gear_id, type = "Upda
     .then(response => response.json())
     .then(data => {
         const index = runningGearData.findIndex(g => g.gear_id == gear_id);
-        console.log(runningGearData)
-        console.log(runningGearData[index])
+        const distance = Number(runningGearData[index].distance) + totalNewMiles;
         if (index !== -1) {
-            runningGearData[index].distance += totalNewMiles;
+            runningGearData[index].distance = distance;
             runningGearData[index].active = active;
             runningGearData[index].default_type = default_type;
         }
@@ -86,7 +89,7 @@ function renderTable() {
 
     table.innerHTML = "";
 
-    const filteredGear = gear.filter(key => {
+    const filteredGear = runningGearData.filter(key => {
         if (currentSelection === "All") return true; 
 
         if (currentSelection === "Active" && key.active === "Active"){

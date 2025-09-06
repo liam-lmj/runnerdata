@@ -28,8 +28,10 @@ class Gear:
             VALUES (?, ?, ?, ?, ?)
         """, (self.name, self.runner, self.distance, self.active, self.default_type))
         conn.commit()
+        gear_id = c.lastrowid
         conn.close()
-        
+        return gear_id
+            
     def update_gear(self):
         conn = sqlite3.connect('runner.db')
         c = conn.cursor()

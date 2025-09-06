@@ -16,15 +16,15 @@
     <table id="gearTable" class="card-table"></table>
 
     <div id="popup" class="form-popup">
-        <form class="form-container">
+        <form class="form-container" id="popup_form">
             <h1>Update Trainer</h1>
 
             <label for="Add Miles"><b>Add Miles</b></label>
-            <input type="number" placeholder="0" id = "addMiles" name="addMiles">
+            <input type="number" placeholder="0" id = "addMiles" name="addMiles" min="0">
             <br>
 
             <label for="Remove Miles"><b>Remove Miles</b></label>
-            <input type="number" placeholder="0" id = "removeMiles" name = "removeMiles" >
+            <input type="number" placeholder="0" id = "removeMiles" name = "removeMiles" min="0">
             <br>
 
             <label for="Active"><b>Active</b></label>
@@ -61,7 +61,7 @@
             <br>
 
             <label for="Existing Miles"><b>Existing Miles</b></label>
-            <input type="number" placeholder="0" id = "existingMiles" name="existingMiles" required>
+            <input type="number" placeholder="0" id = "existingMiles" name="existingMiles" min="0" required>
             <br>
 
             <label for="Default Type Add"><b>Default Run Type</b></label>
