@@ -6,9 +6,11 @@ const popup = document.getElementById("popup");
 const popupForm = document.getElementById("popup_form");
 const popupAdd = document.getElementById("popup_add");
 const popupAddForm = document.getElementById("popup_add_form");
+const runTypes = ["Easy", "Hard"]
 
 function openAddForm() {
   popupAdd.style.display = "block";
+  popup.style.display = "none";
 }
 
 function closeAddForm() {
@@ -46,7 +48,15 @@ function addAndClose(miles, default_type, trainer, type = "Add") {
             default_type: default_type,
             gear_id: data.gear_id
         }
+        if (runTypes.includes(default_type)){
+          var counter, item;
+          for (counter in runningGearData) {
+            item = runningGearData[counter];
+            if (item.default_type === default_type) item.default_type = 'None'
+          }
+        }
         runningGearData.push(new_trainer)
+
         renderTable();  
         closeAddForm();    
     })
@@ -54,6 +64,7 @@ function addAndClose(miles, default_type, trainer, type = "Add") {
 
 function openForm(gear_id, active, runType) {
   popup.style.display = "block";
+  popupAdd.style.display = "none";
   popup.dataset.gear_id = gear_id;
   activeSelection.value = active;
   defaultTypeSelection.value = runType;
@@ -79,6 +90,15 @@ function updateAndClose(add, remove, active, default_type, gear_id, type = "Upda
             runningGearData[index].active = active;
             runningGearData[index].default_type = default_type;
         }
+
+        if (runTypes.includes(default_type)){
+          var counter, item;
+          for (counter in runningGearData) {
+            item = runningGearData[counter];
+            if (item.default_type === default_type && counter != index) item.default_type = 'None'
+          }
+        }
+
         renderTable();  
         closeForm();    
     })

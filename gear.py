@@ -1,4 +1,5 @@
 import sqlite3
+from constants import run_types
 
 class Gear:
     def __init__(self, name, runner, distance, active, default_type, gear_id=None):
@@ -30,6 +31,8 @@ class Gear:
         conn.commit()
         gear_id = c.lastrowid
         conn.close()
+        self.gear_id = gear_id
+        self.check_and_clear_type_for_other_gear()
         return gear_id
             
     def update_gear(self):
@@ -45,3 +48,18 @@ class Gear:
                     """)
         conn.commit()
         conn.close()
+        self.check_and_clear_type_for_other_gear()
+
+    def check_and_clear_type_for_other_gear(self):
+        if not self.default_type in run_types:
+            return 
+        conn = sqlite3.connect('runner.db')
+        c = conn.cursor()
+        c.execute(f"""UPDATE gear SET 
+                    default_type = 'None' 
+                    WHERE (gear_id != {self.gear_id}) AND (default_type = '{self.default_type}')
+                    """)
+        conn.commit()
+        conn.close()
+
+
