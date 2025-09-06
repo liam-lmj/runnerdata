@@ -134,11 +134,12 @@ function renderTable() {
                                 Default Run Type: ${runType}<br>
                             `;
             button.innerHTML = 'Update Trainer';
+            button.className = 'update-button';
 
             button.addEventListener("click", function() {openForm(key.gear_id, key.active, runType);});
 
-            cell.appendChild(button);
             row.appendChild(cell);
+            row.appendChild(button);
             table.appendChild(row);
         }
 }

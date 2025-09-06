@@ -8,8 +8,8 @@
 
 {% block body %}
     <h1>Training Plan Form</h1>
-    <form method="post" action="/training">
-        <select id="Week" name="Week">
+    <form method="post" action="/training" class="plan-form">
+        <select class="drop-down" id="Week" name="Week">
             {% for week in next_five_weeks %}
                 <option value="{{ week }}">{{ week }}</option>
             {% endfor %}
@@ -18,15 +18,15 @@
         <br><br>
 
         {% for day in days_of_week.values() %}
-            <fieldset>
-                {{ day }}<br>
+            <fieldset class="plan-form-set">
+                <div class="bold-text">{{ day }}</div><br>
                 <label for="{{ day }}_easy_distance">Easy Distance:</label>
-                <input type="number" id="{{ day }}_easy_distance" name="{{ day }}_easy_distance" value="0.0" min="0.0" step="0.1"><br>
+                <input type="number" id="{{ day }}_easy_distance" name="{{ day }}_easy_distance" value="0" min="0.0" step="0.1"><br>
                 <label for="{{ day }}_hard_distance">Hard Distance:</label>
-                <input type="number" id="{{ day }}_hard_distance" name="{{ day }}_hard_distance" value="0.0" min="0.0" step="0.1">
+                <input type="number" id="{{ day }}_hard_distance" name="{{ day }}_hard_distance" value="0" min="0.0" step="0.1">
             </fieldset>
         {% endfor %}
 
-        <input type="submit" value="Create Plan">
+        <input class="button" type="submit" value="Create Plan">
     </form> 
 {% endblock %}

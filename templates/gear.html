@@ -9,12 +9,12 @@
 {% block body %}
     <h1>Running Gear</h1>
 
-    <select id="gearSelection" name="gearSelection">
+    <select class="drop-down" id="gearSelection" name="gearSelection">
             <option value="Active">Active</option>
             <option value="Retired">Retired</option>  
             <option value="All">All</option>
     </select>
-    <button onclick="openAddForm()">Add Trainer</button>
+    <button class="button" onclick="openAddForm()">Add Trainer</button>
     <table id="gearTable" class="card-table"></table>
 
     <div id="popup" class="form-popup">
