@@ -2,7 +2,7 @@ import pandas as pd
 from plan import Plan
 from gear import Gear
 from appdata import get_next_five_weeks, get_weekly_mileage, current_week_year
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 from dashboard import init_dashboard
 from database import get_week_data, get_days_day, get_plan_data, get_running_gear, get_gear_by_id
 from constants import days_of_week, run_types
@@ -18,6 +18,12 @@ weekly_mileage = get_weekly_mileage(week_data)
 next_five_weeks = get_next_five_weeks()
 
 init_dashboard(app, df_week, df_days)
+
+#to deliver banner and css to dash app
+@app.route("/bannerdash.html")
+def serve_banner():
+    return send_from_directory("templates", "bannerdash.html")
+
 
 @app.route("/")
 def index():
