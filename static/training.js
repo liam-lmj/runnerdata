@@ -1,6 +1,6 @@
 const table = document.getElementById("trainingTable");
 const selection = document.getElementById("trainingPlanSelection");
-const trainingPlans = trainingPlansData;  // use data from HTML
+const trainingPlans = trainingPlansData; 
 const daysOfWeek = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
 
 function renderTable() {

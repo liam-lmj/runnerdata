@@ -105,11 +105,11 @@ function renderTable() {
             const row = document.createElement("tr");
             const cell = document.createElement("td");
             const button = document.createElement("button");
-            const runType = key.default_type === null ? "None" : key.default_type
-             
+            const runType = key.default_type === null ? "None" : key.default_type;
+            const roundedDistance = Math.round(key.distance);
             cell.innerHTML = `
                                 Trainer: ${key.name}<br>
-                                Distance: ${key.distance}<br>
+                                Distance: ${roundedDistance}<br> 
                                 Active: ${key.active}<br>
                                 Default Run Type: ${runType}<br>
                             `;

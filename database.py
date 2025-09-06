@@ -66,3 +66,26 @@ def get_gear_by_id(gear_id):
     gear = c.fetchone()
     conn.close()
     return gear
+
+def get_easy_and_hard_gear():
+    conn = sqlite3.connect('runner.db')
+    conn.row_factory = dict_factory
+    c = conn.cursor()
+    c.execute(f"SELECT gear_id, distance, default_type FROM gear WHERE default_type in ('Easy', 'Hard')")
+    gear = c.fetchall()
+    conn.close()
+    return gear
+
+def update_gear(easy_distance, hard_distance):
+    gear_to_update = get_easy_and_hard_gear()
+    conn = sqlite3.connect('runner.db')
+    c = conn.cursor()
+    for gear in gear_to_update:
+        current_distance = gear["distance"]
+        new_miles = current_distance + easy_distance if gear["default_type"] == 'Easy' else current_distance + hard_distance   
+        c.execute(
+            "UPDATE gear SET distance = ? WHERE gear_id = ?",
+            (new_miles, gear["gear_id"])
+        )        
+    conn.commit()
+    conn.close()

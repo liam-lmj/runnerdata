@@ -11,6 +11,7 @@ min_miles_conversion = 26.8224 #divide m/s by this to get minutes per mile
 #activity fields
 
 session_pace = 6 #should be attribute of runner to allow users with wider ranges of abilities
+mile_conversion = 1609
 
 #app fields
 

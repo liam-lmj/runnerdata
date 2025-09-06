@@ -1,5 +1,6 @@
 import sqlite3
-from constants import session_pace, min_miles_conversion
+from constants import session_pace, min_miles_conversion, mile_conversion
+from database import update_gear
 
 class Activity:
     def __init__(self, activity):
@@ -74,6 +75,9 @@ class Activity:
                   {self.easy_time})""")
         conn.commit()
         conn.close()
+        print(self.easy_distance / mile_conversion)
+        print(self.hard_distance / mile_conversion)
+        update_gear(self.easy_distance / mile_conversion, self.hard_distance / mile_conversion)
 
     def update_activity(self):
         conn = sqlite3.connect('runner.db')
