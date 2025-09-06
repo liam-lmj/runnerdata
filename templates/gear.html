@@ -43,20 +43,21 @@
                 <option value="Hard">Hard</option>
             </select> 
             <br>
-
-            <button type="reset" onclick="updateAndClose(document.getElementById('addMiles').value, 
-                                                        document.getElementById('removeMiles').value,
-                                                        document.getElementById('activeSelection').value,
-                                                        document.getElementById('default_type').value,
-                                                        document.getElementById('popup').dataset.gear_id)">Update</button>
-            <button type="reset" onclick="closeForm()">Cancel</button>
+            <div class="button-group">
+                <button type="reset" onclick="updateAndClose(document.getElementById('addMiles').value, 
+                                                            document.getElementById('removeMiles').value,
+                                                            document.getElementById('activeSelection').value,
+                                                            document.getElementById('default_type').value,
+                                                            document.getElementById('popup').dataset.gear_id)">Update</button>
+                <button type="reset" onclick="closeForm()">Cancel</button>
+            </div>
 
         </form>
     </div>
 
     <div id="popup_add" class="form-popup">
         <form class="form-container"id="popup_add_form">
-            <h1>Add Trainer</h1>
+            <h1 class="form-header">Add Trainer</h1>
 
             <label for="Trainer"><b>Trainer</b></label>
             <input type="text" placeholder="trainer" id = "trainer" name="trainer" required>
@@ -73,9 +74,10 @@
                 <option value="Hard">Hard</option>
             </select> 
             <br>
-
-            <button type="button" onclick="validateAdd()">Add</button>
-            <button type="reset" onclick="closeAddForm()">Cancel</button>
+            <div class="button-group">
+                <button type="button" onclick="validateAdd()">Add</button>
+                <button type="reset" onclick="closeAddForm()">Cancel</button>
+            </div>
 
         </form>
     </div>
