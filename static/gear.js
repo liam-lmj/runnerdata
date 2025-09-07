@@ -122,7 +122,6 @@ function renderTable() {
         for (const key of filteredGear){
             const row = document.createElement("tr");
             const cell = document.createElement("td");
-            const button = document.createElement("button");
             const runType = key.default_type === null ? "None" : key.default_type;
             const roundedDistance = Math.round(key.distance);
             cell.innerHTML = `
@@ -131,13 +130,10 @@ function renderTable() {
                                 Active: ${key.active}<br>
                                 Default Run Type: ${runType}<br>
                             `;
-            button.innerHTML = 'Update Trainer';
-            button.className = 'update-button';
 
-            button.addEventListener("click", function() {openForm(key.gear_id, key.active, runType);});
+            cell.addEventListener("click", function() {openForm(key.gear_id, key.active, runType);});
 
             row.appendChild(cell);
-            row.appendChild(button);
             table.appendChild(row);
         }
 }

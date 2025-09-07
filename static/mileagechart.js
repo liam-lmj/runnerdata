@@ -17,9 +17,6 @@ function renderTable(week, mileageData) {
             orderedMileage[key] = weekly_mileage[key];
         }
 
-        console.log(orderedMileage)
-        console.log(weekly_mileage)
-
         for (const [key, value] of Object.entries(orderedMileage)) {
             if (key === "week" || key === "Total") continue;
             row += "<td>";
