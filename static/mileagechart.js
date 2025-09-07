@@ -1,3 +1,5 @@
+const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
 function updateCharts(barData, pieData) {
     Plotly.react('bar', barData.data, barData.layout || {});
     Plotly.react('pie', pieData.data, pieData.layout || {});
@@ -9,7 +11,16 @@ function renderTable(week, mileageData) {
     for (let weekly_mileage of mileageData) {
         if (weekly_mileage.week !== week) continue;
         let row = "<tr>";
-        for (const [key, value] of Object.entries(weekly_mileage)) {
+
+        let orderedMileage = {};
+        for (const key of daysOfWeek) {
+            orderedMileage[key] = weekly_mileage[key];
+        }
+
+        console.log(orderedMileage)
+        console.log(weekly_mileage)
+
+        for (const [key, value] of Object.entries(orderedMileage)) {
             if (key === "week" || key === "Total") continue;
             row += "<td>";
             row += "<div class='center-text'>" + key + "</div>";
