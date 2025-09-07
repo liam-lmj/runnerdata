@@ -73,13 +73,15 @@ def trainingplanform():
 @app.route("/training", methods=["GET", "POST"])
 def trainingplan():
     if request.method == "POST": 
-        plan = Plan(request.form.to_dict())
+        plan = Plan(request.json)
+        print(request.json)
         if plan.plan_exists():
             plan.update_plan()
         else:
-            plan.insert_plan()      
-    training_plans = get_plan_data()
-    return render_template("training.html", training_plans=training_plans, current_week=current_week)
+            plan.insert_plan()
+
+    training_plans = {}
+    return render_template("training.html", training_plans=training_plans, current_week=current_week, next_five_weeks=next_five_weeks)
 
 @app.route("/mileagechart", methods=['GET', 'POST'])
 def mileagev2():

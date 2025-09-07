@@ -23,6 +23,7 @@
     <script>
         const trainingPlansData = {{ training_plans | tojson }};
         const currentWeekYear = "{{ current_week }}";
+        const nextFiveWeeks = {{ next_five_weeks| tojson }};
     </script>
 
     <script src="./static/training.js"></script>

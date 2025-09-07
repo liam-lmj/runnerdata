@@ -1,6 +1,7 @@
 const table = document.getElementById("trainingTable");
 const selection = document.getElementById("trainingPlanSelection");
 const trainingPlans = trainingPlansData; 
+const nextWeeks = nextFiveWeeks;
 const daysOfWeek = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
 const popupAdd = document.getElementById("popup_add_plan");
 
@@ -8,7 +9,7 @@ const popupAdd = document.getElementById("popup_add_plan");
 const initalHtml = `<form class="training-form-container"id="popup_add_plan_form">
                         <h1 class="form-header">Add Plan</h1>
 
-                        <div class="form-row">
+                        <div class="form-row" id="firstDay">
                             <label for="Monday"><b>Monday</b></label>
                             <input type="number" placeholder="input miles" id="monday_miles" name="monday_miles" required>
                         </div>
@@ -46,11 +47,11 @@ const initalHtml = `<form class="training-form-container"id="popup_add_plan_form
                         <div class="form-row">
                             <label for="Session"><b>Session</b></label>
                             <select id="sessionType" name="sessionType">
-                                    <option value="none">None</option>
-                                    <option value="thresh">Threshold</option>
-                                    <option value="aThresh">AM Threshold</option>  
-                                    <option value="hardRepos">Hard Reps</option>
-                                    <option value="race">Race</option>
+                                    <option value="None">None</option>
+                                    <option value="Threshold">Threshold</option>
+                                    <option value="AM Threshold">AM Threshold</option>  
+                                    <option value="Hard Reps">Hard Reps</option>
+                                    <option value="Race">Race</option>
                             </select>
                             <input type="text" placeholder="description" id="sessionDescription" name="sessionDescription" required>
                         </div>
@@ -58,10 +59,30 @@ const initalHtml = `<form class="training-form-container"id="popup_add_plan_form
                         <div class="form-row" id="sessionsContainer"></div>
 
                         <div class="button-group" id="buttons">
-                            <button type="reset" onclick="closeAddForm()">Add</button>
+                            <button type="button" onclick="addAndClose()">Add</button>
                             <button type="reset" onclick="closeAddForm()">Cancel</button>
                         </div>
                     </form>`
+
+function formatWeekDropdown() {
+  const container = document.getElementById('popup_add_plan_form');
+  const firstDay = document.getElementById('firstDay');
+
+  let dropdownDiv = document.createElement('div');
+  let dropdown = document.createElement('select');
+  dropdownDiv.className = "form-row";
+  dropdown.className = "drop-down-alt";
+  dropdown.id = "week";
+
+  let row =  "";
+
+  dropdownDiv.appendChild(dropdown);
+  for (let i = 0; i < nextFiveWeeks.length; i++) {
+    row += `<option value="${nextFiveWeeks[i]}">${nextFiveWeeks[i]}</option>`;
+  }
+  dropdown.innerHTML = row;
+  container.insertBefore(dropdownDiv, firstDay);
+}
 
 function addSessionRow(type, desc) {
   const container = document.getElementById('popup_add_plan_form');
@@ -70,11 +91,11 @@ function addSessionRow(type, desc) {
     <div class="form-row" id="sessionRow${counter}">
       <label for="sessionType${counter}"><b>Session</b></label>
       <select id="sessionType${counter}" name="sessionType${counter}">
-        <option value="none" ${type === 'none' ? 'selected' : ''}>None</option>
-        <option value="thresh" ${type === 'thresh' ? 'selected' : ''}>Threshold</option>
-        <option value="aThresh" ${type === 'aThresh' ? 'selected' : ''}>AM Threshold</option>
-        <option value="hardRepos" ${type === 'hardRepos' ? 'selected' : ''}>Hard Reps</option>
-        <option value="race" ${type === 'race' ? 'selected' : ''}>Race</option>
+        <option value="None" ${type === 'None' ? 'selected' : ''}>None</option>
+        <option value="Threshold" ${type === 'Threshold' ? 'selected' : ''}>Threshold</option>
+        <option value="AM Threshold" ${type === 'AM Threshold' ? 'selected' : ''}>AM Threshold</option>
+        <option value="Hard Reps" ${type === 'Hard Reps' ? 'selected' : ''}>Hard Reps</option>
+        <option value="Race" ${type === 'Race' ? 'selected' : ''}>Race</option>
       </select>
       <input type="text" placeholder="description" id="sessionDescription${counter}" name="sessionDescription${counter}" value="${desc}">
     </div>
@@ -96,16 +117,53 @@ function handleSessionInput() {
   }
 }
 
-
 function openNewPlan() {
   popupAdd.style.display = "block";
   popupAdd.innerHTML = initalHtml;
   counter = 1;
+  formatWeekDropdown()
   document.getElementById('sessionType').addEventListener('change', handleSessionInput);
   document.getElementById('sessionDescription').addEventListener('change', handleSessionInput);
 }
  
 function closeAddForm() {
+  popupAdd.style.display = "none";
+  popupAdd.innerHTML = initalHtml;
+}
+
+function addAndClose() {
+  const week = document.getElementById("week").value;
+  const monday = document.getElementById("monday_miles").value;
+  const tuesday = document.getElementById("tuesday_miles").value;
+  const wednesday = document.getElementById("wednesday_miles").value;
+  const thursday = document.getElementById("thursday_miles").value;
+  const friday = document.getElementById("friday_miles").value;
+  const saturday = document.getElementById("saturday_miles").value;
+  const sunday = document.getElementById("sunday_miles").value;
+  const total = Number(monday) + Number(tuesday) + Number(wednesday) + 
+                Number(thursday) + Number(friday) + Number(saturday) + Number(sunday);
+  let sessionsArray = [];
+
+  for (let i = 1; i < counter; i++) {
+    const sessionDescId = `sessionDescription${i}`;
+    const sessionTypeId = `sessionType${i}`;
+    const sessionDesc = document.getElementById(sessionDescId).value;
+    const sessionType = document.getElementById(sessionTypeId).value;
+    const sessionDict = {
+                          "sessionDesc": sessionDesc,
+                          "sessionType": sessionType
+                        }
+    sessionsArray.push(sessionDict);
+  }
+
+  fetch('/training', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ week, monday, tuesday, wednesday, thursday, 
+                             friday, saturday, sunday, total, sessionsArray,
+                             runner: "34892346", current: "true", achieved: "pending" })
+  })
+
   popupAdd.style.display = "none";
   popupAdd.innerHTML = initalHtml;
 }
