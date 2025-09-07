@@ -1,5 +1,22 @@
 body {
-  background-color: white;
+    background-color: white;
+    font-family: 'Arial', sans-serif; 
+}
+
+.bar{
+    width: 65vw;
+    height: 50vh;
+}
+
+.pie{
+    width: 25vw;
+    height: 50vh;
+}
+
+.chartcontainer {
+    display: flex;          
+    gap: 20px;             
+    align-items: flex-start;
 }
 
 .center-text{

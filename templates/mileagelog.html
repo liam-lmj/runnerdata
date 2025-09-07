@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+
+{% block title %}
+    Weekly Mileage Log
+{% endblock %}
+
+{% include "banner.html" %}
+
+{% block body %}
+
+    <h1>Weekly Mileage Log</h1>
+    <button class="button" onclick="parent.window.location.href='/mileagechart'">Weekly View</button> 
+
+    <table class="card-table">
+    {% for week in weekly_mileage %}
+        <tr>
+            <th>{{ week.week }}</th> 
+            {% for day, data in week.items() %}
+                {% if not loop.last %}
+                    <td>
+                        <div class="center-text">{{ day }}</div>
+                        Easy distance: {{ '%0.2f'| format(data.easy_distance/1609|float) }}<br> 
+                        Hard distance: {{ '%0.2f'| format(data.hard_distance/1609|float) }}<br>
+                        Total distance: {{ '%0.2f'| format(data.total_distance/1609|float) }}<br>
+                        Hard pace: {{ data.hard_pace }}<br>
+                    </td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    </table> 
+
+{% endblock %}

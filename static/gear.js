@@ -39,8 +39,6 @@ function addAndClose(miles, default_type, trainer, type = "Add") {
     })
     .then(response => response.json())
     .then(data => {
-        console.log(runningGearData)
-        console.log(data.gear_id)
         new_trainer = {
             name: trainer,
             distance: miles,

@@ -1,9 +1,18 @@
+import json
+import plotly
+import plotly.express as px
 from datetime import datetime, timedelta
-from constants import days_in_week, week_order, days_of_week
+from constants import days_in_week, week_order, days_of_week, mile_conversion
 
 def current_week_year():
     now = datetime.now()
     week_year = now.strftime("%W-%Y")
+    return week_year
+
+def previous_week_year():
+    now = datetime.now()
+    last_week = now - timedelta(days=7)
+    week_year = last_week.strftime("%W-%Y")
     return week_year
 
 def get_next_five_weeks():
@@ -52,3 +61,28 @@ def get_weekly_mileage(week_data):
     weekly_mileage.reverse()    
 
     return weekly_mileage
+
+def pie_chart(week, df_week):
+    filtered_df_weeks = (df_week[df_week['week'] == week])
+    pie_df = ({
+        'Types': ['Easy Miles', 'Hard Miles'],
+        'Distance': [float(filtered_df_weeks['easy_distance'].sum() / mile_conversion),
+                    float(filtered_df_weeks['hard_distance'].sum() / mile_conversion)]
+    })
+    fig_pie = px.pie(pie_df, names="Types", values="Distance")
+    pie_json = json.dumps(fig_pie, cls=plotly.utils.PlotlyJSONEncoder)
+    return pie_json
+
+
+def bar_chart(week, df_days):
+    filtered_df_days = (df_days[df_days['week'] == week]
+                .assign(Miles=lambda x: round(x['total_distance'] / mile_conversion, 2))
+                .assign(Days=lambda x: x['day'].map(days_of_week))
+                .assign(order=lambda x: x['day'].map({day: i for i, day in enumerate(week_order)}))
+                .sort_values('order')
+                )
+    fig_bar = px.bar(filtered_df_days, x="Days", y="Miles", color="Days")
+    fig_bar.update_traces(showlegend=False)
+    bar_json = json.dumps(fig_bar, cls=plotly.utils.PlotlyJSONEncoder)
+
+    return bar_json

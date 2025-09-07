@@ -1,7 +1,8 @@
 import pandas as pd 
+import json
 from plan import Plan
 from gear import Gear
-from appdata import get_next_five_weeks, get_weekly_mileage, current_week_year
+from appdata import get_next_five_weeks, get_weekly_mileage, current_week_year, bar_chart, pie_chart, previous_week_year
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from dashboard import init_dashboard
 from database import get_week_data, get_days_day, get_plan_data, get_running_gear, get_gear_by_id
@@ -19,11 +20,10 @@ next_five_weeks = get_next_five_weeks()
 
 init_dashboard(app, df_week, df_days)
 
-#to deliver banner and css to dash app
+#to deliver banner to dash app
 @app.route("/bannerdash.html")
 def serve_banner():
     return send_from_directory("templates", "bannerdash.html")
-
 
 @app.route("/")
 def index():
@@ -31,7 +31,7 @@ def index():
 
 @app.route("/mileagelog")
 def mileage():
-    return render_template("mileagechart.html", weekly_mileage=weekly_mileage)
+    return render_template("mileagelog.html", weekly_mileage=weekly_mileage)
 
 @app.route("/gear", methods=["GET", "POST"])
 def gear():
@@ -80,6 +80,19 @@ def trainingplan():
             plan.insert_plan()      
     training_plans = get_plan_data()
     return render_template("training.html", training_plans=training_plans, current_week=current_week)
+
+@app.route("/mileagechart", methods=['GET', 'POST'])
+def mileagev2():
+    bar_json = bar_chart(previous_week_year(), df_days)
+    pie_json = pie_chart(previous_week_year(), df_week)
+    week = previous_week_year()
+    if request.method == "POST":
+        week = request.json["selectedWeek"]
+        bar_json = bar_chart(week, df_days)
+        pie_json = pie_chart(week, df_week)
+        return jsonify({"success": True, "bar_json": bar_json, "pie_json": pie_json})
+
+    return render_template("mileagechart.html", bar_json=bar_json, pie_json=pie_json, weekly_mileage=weekly_mileage, week=week)
 
 if __name__ == "__main__":
     app.run(debug=True)

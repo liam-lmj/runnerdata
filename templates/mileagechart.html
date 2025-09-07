@@ -10,23 +10,30 @@
 {% block body %}
 
     <h1>Weekly Mileage Log</h1>
-    <table class="card-table">
-    {% for week in weekly_mileage %}
-        <tr>
-            <th>{{ week.week }}</th> 
-            {% for day, data in week.items() %}
-                {% if not loop.last %}
-                    <td>
-                        <div class="center-text">{{ day }}</div>
-                        Easy distance: {{ '%0.2f'| format(data.easy_distance/1609|float) }}<br> 
-                        Hard distance: {{ '%0.2f'| format(data.hard_distance/1609|float) }}<br>
-                        Total distance: {{ '%0.2f'| format(data.total_distance/1609|float) }}<br>
-                        Hard pace: {{ data.hard_pace }}<br>
-                    </td>
-                {% endif %}
+
+    <select class="drop-down" id="week" name="Week">
+            {% for week in weekly_mileage %}
+                <option value="{{ week.week }}">{{ week.week}}</option>
             {% endfor %}
-        </tr>
-    {% endfor %}
-    </table> 
+    </select>
+    <button class="button" onclick="parent.window.location.href='/mileagelog'">Grid View</button> 
+    <div class="chartcontainer">
+        <div id="bar" class="bar"></div>
+        <div id="pie" class="pie"></div>
+    </div>
+
+    <table class="card-table" id="mileageTable"></table>
+
+    <script>
+        const barData = {{ bar_json | safe }};
+        const pieData = {{ pie_json | safe }};
+        const weekYear = "{{ week | safe }}";
+        const mileageData = {{ weekly_mileage | tojson }};
+    </script>
+
+    <script src="./static/mileagechart.js"></script>
+    <script>
+        initializeCharts(barData, pieData, weekYear, mileageData);
+    </script>
 
 {% endblock %}
