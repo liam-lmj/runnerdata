@@ -133,7 +133,7 @@ body {
     display: none;
 }
 
-.form-container{
+.form-container, .training-form-container{
     background: #6A819F;
     
     position: fixed;
@@ -155,14 +155,31 @@ body {
     background: #f1f1f1;
 }
 
-.form-container .button-group {
+.form-container .button-group, .training-form-container .button-group {
     display: flex;
     justify-content: space-between; 
     gap: 0.5rem;
 }
 
-.form-container .button-group button {
+.form-container .button-group button, .training-form-container .button-group button {
     flex: 1; 
     padding: 1rem;
     box-sizing: border-box;
+}
+
+.training-form-container .form-row {
+    display: flex;
+    gap: 10px; 
+    margin-bottom: 0.5rem;
+}
+
+.training-form-container .form-row label {
+    width: 15%;  
+    height: 2rem;
+    padding-right: 10px; 
+}
+
+.training-form-container .form-row input {
+    flex: 1; 
+    height: 2rem;
 }

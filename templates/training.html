@@ -14,13 +14,17 @@
             <option value="Previous">Previous</option>  
             <option value="All">All</option>
     </select>
+    <button class="button" onclick="openNewPlan()">New Plan</button>
 
     <table id="trainingTable" class="card-table"></table> 
+
+    <div id="popup_add_plan" class="form-popup"></div>
 
     <script>
         const trainingPlansData = {{ training_plans | tojson }};
         const currentWeekYear = "{{ current_week }}";
     </script>
+
     <script src="./static/training.js"></script>
 
 
