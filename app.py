@@ -74,12 +74,13 @@ def trainingplanform():
 def trainingplan():
     if request.method == "POST": 
         plan = Plan(request.json)
-        print(request.json)
         if plan.plan_exists():
             plan.update_plan()
+            plan.update_vs_week()
         else:
             plan.insert_plan()
 
+    #TODO get plan data need to replace old get plan data function
     training_plans = {}
     return render_template("training.html", training_plans=training_plans, current_week=current_week, next_five_weeks=next_five_weeks)
 
