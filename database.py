@@ -43,10 +43,6 @@ def get_plan_data():
     c.execute("SELECT * FROM plan ORDER BY week ASC")
     plans = c.fetchall()
     conn.close()
-    for plan in plans:
-        for key, value in plan.items():
-            if key != "week":
-                plan[key] = eval(value)
     return plans
 
 def get_running_gear():
