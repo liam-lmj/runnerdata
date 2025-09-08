@@ -1,4 +1,5 @@
 import sqlite3
+from plan import Plan
 
 def dict_factory(cursor, row): 
     d = {}
@@ -35,6 +36,22 @@ def get_days_day(weeks):
             days_dict["hard_pace"].append(days[day]["hard_pace"])
 
     return days_dict
+
+def update_pending_plans(runner):
+    conn = sqlite3.connect('runner.db')
+    conn.row_factory = dict_factory  
+    c = conn.cursor()
+    c.execute(f"SELECT * FROM plan WHERE achieved != 'pending' and runner = {runner}")
+    plans = c.fetchall()
+    conn.close()
+    for record in plans:
+        plan = Plan(record)
+        plan.update_current()
+        plan.update_vs_week()
+        if plan.plan_exists():
+            plan.update_plan()
+        else:
+            plan.insert_plan()
 
 def get_plan_data():
     conn = sqlite3.connect('runner.db')

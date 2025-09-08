@@ -5,7 +5,7 @@ from constants import mile_conversion
 
 class Plan:
     def __init__(self, request):
-        self.week = "34-2025" #request["week"]
+        self.week = request["week"]
         self.monday = self.parse_float(request["monday"])
         self.tuesday = self.parse_float(request["tuesday"])
         self.wednesday = self.parse_float(request["wednesday"])
@@ -17,7 +17,7 @@ class Plan:
         self.runner = request["runner"]
         self.achieved = request["achieved"]
         self.current = request["current"]
-        self.sessions = json.dumps(request["sessionsArray"])
+        self.sessions = json.dumps(request["sessions"])
         self.real_session_count = 0
         self.real_miles = 0
 
@@ -116,5 +116,7 @@ class Plan:
         self.real_session_count = real_session_count
         if self.total <= self.real_miles:
             self.achieved = "true"
-        else:
+        elif self.current == "false":
             self.achieved = "false"
+        else:
+            self.achieved = "pending"

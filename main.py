@@ -4,6 +4,7 @@ from stravaapi import new_access_token, get_activities
 from runner import Runner
 from activity import Activity
 from week import Week
+from database import update_pending_plans
 
 #TODO protect vs sql inject maybe seperate database.py file for sql functions and logic very similar
 def main():
@@ -43,6 +44,9 @@ def main():
                 week.update_week()
             else:
                 week.insert_week()
+
+        update_pending_plans(runner.id)
+
 
 if __name__ == "__main__":
     main()

@@ -142,7 +142,7 @@ function addAndClose() {
   const sunday = document.getElementById("sunday_miles").value;
   const total = Number(monday) + Number(tuesday) + Number(wednesday) + 
                 Number(thursday) + Number(friday) + Number(saturday) + Number(sunday);
-  let sessionsArray = [];
+  let sessions = [];
 
   for (let i = 1; i < counter; i++) {
     const sessionDescId = `sessionDescription${i}`;
@@ -153,14 +153,14 @@ function addAndClose() {
                           "sessionDesc": sessionDesc,
                           "sessionType": sessionType
                         }
-    sessionsArray.push(sessionDict);
+    sessions.push(sessionDict);
   }
 
   fetch('/training', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ week, monday, tuesday, wednesday, thursday, 
-                             friday, saturday, sunday, total, sessionsArray,
+                             friday, saturday, sunday, total, sessions,
                              runner: "34892346", current: "true", achieved: "pending" })
   })
 
