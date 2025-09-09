@@ -20,7 +20,12 @@
 
     <div id="popup_add_plan" class="form-popup"></div>
 
+    <div class="chartcontainer">
+        <div id="bar" class="bar"></div>
+    </div>
+
     <script>
+        const barData = {{ bar_json_plans | safe }};
         const trainingPlansData = {{ training_plans | tojson }};
         const currentWeekYear = "{{ current_week }}";
         const nextFiveWeeks = {{ next_five_weeks| tojson }};
@@ -28,5 +33,8 @@
 
     <script src="./static/training.js"></script>
 
+    <script>
+        initializeCharts(barData);
+    </script>
 
 {% endblock %}

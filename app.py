@@ -1,8 +1,7 @@
 import pandas as pd 
-import json
 from plan import Plan
 from gear import Gear
-from appdata import get_next_five_weeks, get_weekly_mileage, current_week_year, bar_chart, pie_chart, previous_week_year
+from appdata import get_next_five_weeks, get_weekly_mileage, current_week_year, bar_chart, pie_chart, previous_week_year, bar_chart_plan
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from dashboard import init_dashboard
 from database import get_week_data, get_days_day, get_plan_data, get_running_gear, get_gear_by_id
@@ -17,6 +16,9 @@ df_days = pd.DataFrame(get_days_day(week_data))
 
 weekly_mileage = get_weekly_mileage(week_data)
 next_five_weeks = get_next_five_weeks()
+
+training_plans = get_plan_data()
+df_plans = pd.DataFrame(training_plans)
 
 init_dashboard(app, df_week, df_days)
 
@@ -72,6 +74,7 @@ def trainingplanform():
 
 @app.route("/training", methods=["GET", "POST"])
 def trainingplan():
+    bar_json_plans = bar_chart_plan(current_week_year(), df_plans)
     if request.method == "POST": 
         plan = Plan(request.json)
         if plan.plan_exists():
@@ -80,9 +83,7 @@ def trainingplan():
         else:
             plan.insert_plan()
 
-    #TODO get plan data need to replace old get plan data function
-    training_plans = {}
-    return render_template("training.html", training_plans=training_plans, current_week=current_week, next_five_weeks=next_five_weeks)
+    return render_template("training.html", training_plans=training_plans, bar_json_plans=bar_json_plans,current_week=current_week, next_five_weeks=next_five_weeks)
 
 @app.route("/mileagechart", methods=['GET', 'POST'])
 def mileagev2():

@@ -86,3 +86,18 @@ def bar_chart(week, df_days):
     bar_json = json.dumps(fig_bar, cls=plotly.utils.PlotlyJSONEncoder)
 
     return bar_json
+
+def bar_chart_plan(week, df_plans):
+    filtered_df_days = (df_plans[df_plans['week'] == week])
+    filtered_df_days.columns = [col.capitalize() for col in filtered_df_days.columns]
+    days = list(days_of_week.values())
+    y_values = filtered_df_days[days].iloc[0]
+
+    fig_bar = px.bar(x=days, y=y_values, color=days)
+    fig_bar.update_traces(showlegend=False)
+    fig_bar.update_layout(
+                            xaxis_title='Days',
+                            yaxis_title='Miles'
+                        )
+    bar_json = json.dumps(fig_bar, cls=plotly.utils.PlotlyJSONEncoder)
+    return bar_json
