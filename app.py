@@ -76,12 +76,18 @@ def trainingplanform():
 def trainingplan():
     bar_json_plans = bar_chart_plan(current_week_year(), df_plans)
     if request.method == "POST": 
-        plan = Plan(request.json)
-        if plan.plan_exists():
-            plan.update_plan()
-            plan.update_vs_week()
-        else:
-            plan.insert_plan()
+
+        if request.json["type"] == "addPlan":
+            plan = Plan(request.json)
+            if plan.plan_exists():
+                plan.update_plan()
+                plan.update_vs_week()
+            else:
+                plan.insert_plan()
+        elif request.json["type"] == "updateChart":
+            week = request.json["selectedWeek"]
+            bar_json_plans = bar_chart_plan(week, df_plans)
+            return jsonify({"success": True, "bar_json": bar_json_plans})
 
     return render_template("training.html", training_plans=training_plans, bar_json_plans=bar_json_plans,current_week=current_week, next_five_weeks=next_five_weeks)
 

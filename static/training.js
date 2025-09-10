@@ -5,7 +5,6 @@ const nextWeeks = nextFiveWeeks;
 const daysOfWeek = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
 const popupAdd = document.getElementById("popup_add_plan");
 
-
 const initalHtml = `<form class="training-form-container"id="popup_add_plan_form">
                         <h1 class="form-header">Add Plan</h1>
 
@@ -64,6 +63,8 @@ const initalHtml = `<form class="training-form-container"id="popup_add_plan_form
                         </div>
                     </form>`
 
+
+
 function formatWeekDropdown() {
   const container = document.getElementById('popup_add_plan_form');
   const firstDay = document.getElementById('firstDay');
@@ -72,7 +73,7 @@ function formatWeekDropdown() {
   let dropdown = document.createElement('select');
   dropdownDiv.className = "form-row";
   dropdown.className = "drop-down-alt";
-  dropdown.id = "week";
+  dropdown.id = "weekNewPlan";
 
   let row =  "";
 
@@ -132,7 +133,7 @@ function closeAddForm() {
 }
 
 function addAndClose() {
-  const week = document.getElementById("week").value;
+  const weekNewPlan = document.getElementById("weekNewPlan").value;
   const monday = document.getElementById("monday_miles").value;
   const tuesday = document.getElementById("tuesday_miles").value;
   const wednesday = document.getElementById("wednesday_miles").value;
@@ -159,7 +160,7 @@ function addAndClose() {
   fetch('/training', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ week, monday, tuesday, wednesday, thursday, 
+      body: JSON.stringify({ type: "addPlan", weekNewPlan, monday, tuesday, wednesday, thursday, 
                              friday, saturday, sunday, total, sessions,
                              runner: "34892346", current: "true", achieved: "pending" })
   })
@@ -168,6 +169,33 @@ function addAndClose() {
   popupAdd.innerHTML = initalHtml;
 }
 
-function initializeCharts(barData) {
+function updateCharts(barData) {
     Plotly.react('bar', barData.data, barData.layout || {});
+}
+
+function initialiseElements(barData) {
+    Plotly.react('bar', barData.data, barData.layout || {});
+    var select = document.getElementById("week");
+
+    for (const item of trainingPlans) {
+      var option = document.createElement("option");
+      option.text = item.week;
+      option.value = item.week;
+      select.add(option);
+    }
+
+    select.addEventListener('change', function() {
+        const selectedWeek = this.value;
+        fetch('/training', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type: "updateChart", selectedWeek })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const bar = JSON.parse(data.bar_json);
+            updateCharts(bar);
+        });
+    });
+
 }

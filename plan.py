@@ -5,7 +5,7 @@ from constants import mile_conversion
 
 class Plan:
     def __init__(self, request):
-        self.week = request["week"]
+        self.week = request["weekNewPlan"]
         self.monday = self.parse_float(request["monday"])
         self.tuesday = self.parse_float(request["tuesday"])
         self.wednesday = self.parse_float(request["wednesday"])
@@ -32,6 +32,8 @@ class Plan:
         c = conn.cursor()
         c.execute(f"SELECT * FROM plan WHERE week = '{self.week}'")
         exists = c.fetchone()
+        print(exists)
+        print(self.week)
         conn.close()
         if exists:
             return True

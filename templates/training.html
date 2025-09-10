@@ -9,14 +9,9 @@
 {% block body %}
     <h1>Training Plans</h1>
 
-    <select class="drop-down" id="trainingPlanSelection" name="trainingPlanSelection">
-            <option value="Current">Current</option>
-            <option value="Previous">Previous</option>  
-            <option value="All">All</option>
-    </select>
-    <button class="button" onclick="openNewPlan()">New Plan</button>
+    <select class="drop-down" id="week" name="week"></select>
 
-    <table id="trainingTable" class="card-table"></table> 
+    <button class="button" onclick="openNewPlan()">New Plan</button>
 
     <div id="popup_add_plan" class="form-popup"></div>
 
@@ -34,7 +29,7 @@
     <script src="./static/training.js"></script>
 
     <script>
-        initializeCharts(barData);
+        initialiseElements(barData);
     </script>
 
 {% endblock %}
