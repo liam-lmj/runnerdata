@@ -170,11 +170,35 @@ function addAndClose() {
 }
 
 function updateCharts(barData) {
-    Plotly.react('bar', barData.data, barData.layout || {});
+  Plotly.react('bar', barData.data, barData.layout || {});
+}
+
+function updateTable(week) {
+  const filteredPlans = trainingPlans.filter(key => {
+    if (key.week === week) {
+      return true;
+    }
+  });
+  console.log(filteredPlans)
+  let i = 0;
+  for (const item of filteredPlans) {
+    var row = table.insertRow(i)
+    
+    const sessions = JSON.parse(item.sessions);
+    console.log(sessions)
+    let j = 0;
+    for (const session of item.sessions) {
+      var cell = row.insertCell();
+      cell.innerHTML = `test`; 
+      j++;
+    }
+    i++;
+  }
 }
 
 function initialiseElements(barData) {
     Plotly.react('bar', barData.data, barData.layout || {});
+    updateTable("37-2025");
     var select = document.getElementById("week");
 
     for (const item of trainingPlans) {
