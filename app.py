@@ -66,10 +66,6 @@ def gear():
 
     return render_template("gear.html", running_gear=running_gear)
 
-@app.route("/trainingform", methods=["GET", "POST"])
-def trainingplanform():
-    return render_template("trainingplanform.html", days_of_week=days_of_week, next_five_weeks=next_five_weeks)
-
 @app.route("/training", methods=["GET", "POST"])
 def trainingplan():
     training_plans = get_plan_data()
