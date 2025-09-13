@@ -32,8 +32,6 @@ class Plan:
         c = conn.cursor()
         c.execute(f"SELECT * FROM plan WHERE week = '{self.week}'")
         exists = c.fetchone()
-        print(exists)
-        print(self.week)
         conn.close()
         if exists:
             return True

@@ -1,7 +1,8 @@
 const table = document.getElementById("trainingTable");
 const totalTable = document.getElementById("totals")
 const selection = document.getElementById("trainingPlanSelection");
-const trainingPlans = trainingPlansData; 
+var select = document.getElementById("week");
+let trainingPlans = trainingPlansData; 
 const nextWeeks = nextFiveWeeks;
 const daysOfWeek = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
 const popupAdd = document.getElementById("popup_add_plan");
@@ -63,8 +64,6 @@ const initalHtml = `<form class="training-form-container"id="popup_add_plan_form
                             <button type="reset" onclick="closeAddForm()">Cancel</button>
                         </div>
                     </form>`
-
-
 
 function formatWeekDropdown() {
   const container = document.getElementById('popup_add_plan_form');
@@ -165,6 +164,11 @@ function addAndClose() {
                              friday, saturday, sunday, total, sessions,
                              runner: "34892346", current: "true", achieved: "pending" })
   })
+  .then(response => response.json())
+  .then(data => {
+    trainingPlans = data.training_plans;
+    initialiseElements(barData);
+  });
 
   popupAdd.style.display = "none";
   popupAdd.innerHTML = initalHtml;
@@ -205,31 +209,34 @@ function updateTables(week) {
   }
 }
 
+function updateSelect() {
+  select.options.length = 0;
+  for (const item of trainingPlans) {
+    var option = document.createElement("option");
+    option.text = item.week;
+    option.value = item.week;
+    select.add(option);
+  }
+}
+
 function initialiseElements(barData) {
-    Plotly.react('bar', barData.data, barData.layout || {});
-    updateTables(currentWeekYear);
-    var select = document.getElementById("week");
+  updateCharts(barData);
+  updateTables(currentWeekYear);
+  updateSelect();
 
-    for (const item of trainingPlans) {
-      var option = document.createElement("option");
-      option.text = item.week;
-      option.value = item.week;
-      select.add(option);
-    }
-
-    select.addEventListener('change', function() {
-        const selectedWeek = this.value;
-        fetch('/training', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ type: "updateChart", selectedWeek })
-        })
-        .then(response => response.json())
-        .then(data => {
-            const bar = JSON.parse(data.bar_json);
-            updateCharts(bar);
-            updateTables(selectedWeek);
-        });
-    });
+  select.addEventListener('change', function() {
+      const selectedWeek = this.value;
+      fetch('/training', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: "updateChart", selectedWeek })
+      })
+      .then(response => response.json())
+      .then(data => {
+          const bar = JSON.parse(data.bar_json);
+          updateCharts(bar);
+          updateTables(selectedWeek);
+      });
+  });
 
 }

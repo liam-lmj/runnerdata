@@ -23,8 +23,8 @@
     <table class="card-table" id="totals"></table> 
 
     <script>
-        const barData = {{ bar_json_plans | safe }};
-        const trainingPlansData = {{ training_plans | tojson }};
+        const barData = {{ bar_json_plans | default("null", true) | safe }};
+        const trainingPlansData = {{ training_plans | default("null", true) | tojson }};
         const currentWeekYear = "{{ current_week }}";
         const nextFiveWeeks = {{ next_five_weeks| tojson }};
     </script>

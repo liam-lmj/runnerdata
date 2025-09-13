@@ -17,8 +17,6 @@ df_days = pd.DataFrame(get_days_day(week_data))
 weekly_mileage = get_weekly_mileage(week_data)
 next_five_weeks = get_next_five_weeks()
 
-training_plans = get_plan_data()
-df_plans = pd.DataFrame(training_plans)
 
 init_dashboard(app, df_week, df_days)
 
@@ -74,9 +72,11 @@ def trainingplanform():
 
 @app.route("/training", methods=["GET", "POST"])
 def trainingplan():
-    bar_json_plans = bar_chart_plan(current_week_year(), df_plans)
-    if request.method == "POST": 
+    training_plans = get_plan_data()
+    df_plans = pd.DataFrame(get_plan_data()) if training_plans else None
+    bar_json_plans = bar_chart_plan("37-2025", df_plans) if training_plans else None #TODO fix hardcoded week value
 
+    if request.method == "POST": 
         if request.json["type"] == "addPlan":
             plan = Plan(request.json)
             if plan.plan_exists():
@@ -84,12 +84,15 @@ def trainingplan():
                 plan.update_vs_week()
             else:
                 plan.insert_plan()
+            training_plans = get_plan_data()
+            return jsonify({"success": True, "training_plans": training_plans})
+        
         elif request.json["type"] == "updateChart":
             week = request.json["selectedWeek"]
             bar_json_plans = bar_chart_plan(week, df_plans)
             return jsonify({"success": True, "bar_json": bar_json_plans})
 
-    return render_template("training.html", training_plans=training_plans, bar_json_plans=bar_json_plans,current_week=current_week, next_five_weeks=next_five_weeks)
+    return render_template("training.html", training_plans=training_plans, bar_json_plans=bar_json_plans,current_week="37-2025", next_five_weeks=next_five_weeks) #TODO fix hardcoded week value
 
 @app.route("/mileagechart", methods=['GET', 'POST'])
 def mileagev2():
