@@ -130,17 +130,25 @@ body {
 .card-table-plan{
     width: 30vw;
     height: 50vh;
+    display: flex;
+    flex-direction: column; 
+    overflow: hidden;
+}
+
+
+.card-table-plan tbody {
+    display: block;
+    overflow-y: auto;
+    flex: 1;
 }
 
 .card-table-plan tr{
     display: flex; 
     padding: 1rem;
-    height: 40%;
 }
 
 .card-table-plan td{
     flex: 1;
-    width: 50%;
     background: #E0E5EA;
     color: black;
     padding: 1.5rem;

@@ -1,4 +1,5 @@
 const table = document.getElementById("trainingTable");
+const totalTable = document.getElementById("totals")
 const selection = document.getElementById("trainingPlanSelection");
 const trainingPlans = trainingPlansData; 
 const nextWeeks = nextFiveWeeks;
@@ -173,32 +174,40 @@ function updateCharts(barData) {
   Plotly.react('bar', barData.data, barData.layout || {});
 }
 
-function updateTable(week) {
+function updateTables(week) {
+  totalTable.innerHTML = "";
+  table.innerHTML = "";
+
   const filteredPlans = trainingPlans.filter(key => {
     if (key.week === week) {
       return true;
     }
   });
-  let i = 0;
   for (const item of filteredPlans) {
-    var row = table.insertRow(i)
-    
+    const total = item.total;
+    const realMiles = item.real_miles === 0 ? "Pending" : item.real_miles;
+    const realCount = item.real_session_count === 0 ? "Pending" : item.real_session_count;
+
     const sessions = JSON.parse(item.sessions);
-    let j = 1;
+    let sessionCount = 0;
     for (const session of sessions) {
+      var row = table.insertRow(sessionCount);
       var cell = row.insertCell();
-      console.log(session)
-      cell.innerHTML = `<div class='center-text'> Session ${j}</div> <br> Type: ${session.sessionType} <br> Description ${session.sessionDesc}`; 
-      j++;
+      cell.innerHTML = `<div class='center-text'> Session ${sessionCount + 1}</div> <br> Type: ${session.sessionType} <br> Description ${session.sessionDesc}`; 
+      sessionCount++;
     }
-    i++;
+
+    var row = totalTable.insertRow(0)
+    var milesCell = row.insertCell();
+    var sessionsCell = row.insertCell();
+    milesCell.innerHTML = `<div class="center-text">Total Miles</div><br>Planned: ${total} Miles<br>Actual: ${realMiles} Miles<br>`;
+    sessionsCell.innerHTML = `<div class="center-text">Session Count</div><br>Planned: ${sessionCount} Sessions<br>Actual: ${realCount} Sessions<br>`;
   }
 }
 
 function initialiseElements(barData) {
     Plotly.react('bar', barData.data, barData.layout || {});
-    console.log(currentWeekYear)
-    updateTable(currentWeekYear);
+    updateTables(currentWeekYear);
     var select = document.getElementById("week");
 
     for (const item of trainingPlans) {
@@ -219,6 +228,7 @@ function initialiseElements(barData) {
         .then(data => {
             const bar = JSON.parse(data.bar_json);
             updateCharts(bar);
+            updateTables(selectedWeek);
         });
     });
 
