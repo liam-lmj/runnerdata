@@ -179,17 +179,16 @@ function updateTable(week) {
       return true;
     }
   });
-  console.log(filteredPlans)
   let i = 0;
   for (const item of filteredPlans) {
     var row = table.insertRow(i)
     
     const sessions = JSON.parse(item.sessions);
-    console.log(sessions)
-    let j = 0;
-    for (const session of item.sessions) {
+    let j = 1;
+    for (const session of sessions) {
       var cell = row.insertCell();
-      cell.innerHTML = `test`; 
+      console.log(session)
+      cell.innerHTML = `<div class='center-text'> Session ${j}</div> <br> Type: ${session.sessionType} <br> Description ${session.sessionDesc}`; 
       j++;
     }
     i++;
@@ -198,7 +197,8 @@ function updateTable(week) {
 
 function initialiseElements(barData) {
     Plotly.react('bar', barData.data, barData.layout || {});
-    updateTable("37-2025");
+    console.log(currentWeekYear)
+    updateTable(currentWeekYear);
     var select = document.getElementById("week");
 
     for (const item of trainingPlans) {
