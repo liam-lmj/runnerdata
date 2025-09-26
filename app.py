@@ -5,7 +5,7 @@ from appdata import get_next_five_weeks, get_weekly_mileage, current_week_year, 
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from dashboard import init_dashboard
 from database import get_week_data, get_days_day, get_plan_data, get_running_gear, get_gear_by_id
-from constants import days_of_week, run_types
+from constants import days_of_week, run_types, auth_url
 
 app = Flask(__name__)
 
@@ -17,7 +17,6 @@ df_days = pd.DataFrame(get_days_day(week_data))
 weekly_mileage = get_weekly_mileage(week_data)
 next_five_weeks = get_next_five_weeks()
 
-
 init_dashboard(app, df_week, df_days)
 
 #to deliver banner to dash app
@@ -26,8 +25,8 @@ def serve_banner():
     return send_from_directory("templates", "bannerdash.html")
 
 @app.route("/")
-def index():
-    return render_template("index.html")
+def authorise():
+    return render_template("authorise.html", auth_url=auth_url)
 
 @app.route("/mileagelog")
 def mileage():
