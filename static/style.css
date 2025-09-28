@@ -237,3 +237,30 @@ body {
     flex: 1; 
     height: 2rem;
 }
+
+.login-container{
+    background: #6A819F;
+    
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 25%;
+    transform: translate(-50%, -50%);
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+
+    color: white;
+}
+
+.login-header {
+    color: white;
+    white-space: nowrap;
+    font-size: 1.5vw;
+    text-align: center;
+}
+
+.login-connect {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
