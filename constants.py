@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 
 #api fields
+runner_url = "https://www.strava.com/oauth/token"
 refresh_url = "https://www.strava.com/oauth/token"
 activities_url = "https://www.strava.com/api/v3/athlete/activities"
 laps_url_start = "https://www.strava.com/api/v3/activities/"

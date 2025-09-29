@@ -3,11 +3,20 @@ import requests
 import sqlite3
 from datetime import datetime
 from dotenv import load_dotenv
-from constants import refresh_url, activities_url, laps_url_start, lap_url_end, page_limit, min_miles_conversion
+from constants import runner_url, refresh_url, activities_url, laps_url_start, lap_url_end, page_limit, min_miles_conversion
 
 load_dotenv()
 client_id = os.getenv("client_id")
 client_secret = os.getenv("client_secret")
+
+def load_runner(code):
+    response = requests.post(runner_url, params={"client_id": client_id, "client_secret": client_secret, "code": code, "grant_type": "authorization_code"})
+    if not response.ok:
+        raise Exception("Failed get runner")
+    response_json = response.json()
+    refresh_token = response_json["refresh_token"]
+    runner_id = response_json["athlete"]["id"]
+    return refresh_token, runner_id
 
 def new_access_token(refresh_token):
     response = requests.post(refresh_url, params={"client_id": client_id, "client_secret": client_secret, "refresh_token": refresh_token, "grant_type": "refresh_token"})

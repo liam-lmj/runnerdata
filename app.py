@@ -1,13 +1,18 @@
+import os
 import pandas as pd 
 from plan import Plan
 from gear import Gear
 from appdata import get_next_five_weeks, get_weekly_mileage, current_week_year, bar_chart, pie_chart, previous_week_year, bar_chart_plan
-from flask import Flask, render_template, request, jsonify, send_from_directory
+from flask import Flask, render_template, request, jsonify, send_from_directory, session
 from dashboard import init_dashboard
 from database import get_week_data, get_days_day, get_plan_data, get_running_gear, get_gear_by_id
-from constants import days_of_week, run_types, auth_url
+from constants import  run_types, auth_url
+from stravaapi import load_runner, new_access_token
+from dotenv import load_dotenv
+load_dotenv()
 
 app = Flask(__name__)
+app.secret_key = os.getenv("secret_key")
 
 current_week = current_week_year()
 week_data = get_week_data()
@@ -27,6 +32,13 @@ def serve_banner():
 @app.route("/")
 def authorise():
     return render_template("authorise.html", auth_url=auth_url)
+
+@app.route("/testing")
+def testing():
+    code = request.args.get('code')
+    token, runner = load_runner(code)
+    session['user_id'] = runner
+    return render_template("testing.html", code=code, token=token, runner=runner)
 
 @app.route("/mileagelog")
 def mileage():
