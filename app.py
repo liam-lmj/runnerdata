@@ -3,12 +3,13 @@ import pandas as pd
 from plan import Plan
 from gear import Gear
 from appdata import get_next_five_weeks, get_weekly_mileage, current_week_year, bar_chart, pie_chart, previous_week_year, bar_chart_plan
-from flask import Flask, render_template, request, jsonify, send_from_directory, session
+from flask import Flask, render_template, request, jsonify, send_from_directory, session, redirect
 from dashboard import init_dashboard
 from database import get_week_data, get_days_day, get_plan_data, get_running_gear, get_gear_by_id
 from constants import  run_types, auth_url
 from stravaapi import load_runner, new_access_token
 from dotenv import load_dotenv
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -33,19 +34,24 @@ def serve_banner():
 def authorise():
     return render_template("authorise.html", auth_url=auth_url)
 
-@app.route("/testing")
-def testing():
+@app.route("/loaduser")
+def loaduser():
     code = request.args.get('code')
-    token, runner = load_runner(code)
+    token, runner = load_runner(code) 
     session['user_id'] = runner
-    return render_template("testing.html", code=code, token=token, runner=runner)
+    return redirect("/dash")
 
 @app.route("/mileagelog")
 def mileage():
+    if not 'user_id' in session:
+        return redirect("/")
     return render_template("mileagelog.html", weekly_mileage=weekly_mileage)
 
 @app.route("/gear", methods=["GET", "POST"])
 def gear():
+    if not 'user_id' in session:
+        return redirect("/")
+
     running_gear = get_running_gear()
     if request.method == "POST":
         gear_updates = request.json
@@ -79,6 +85,8 @@ def gear():
 
 @app.route("/training", methods=["GET", "POST"])
 def trainingplan():
+    if not 'user_id' in session:
+        return redirect("/")
     training_plans = get_plan_data()
     df_plans = pd.DataFrame(get_plan_data()) if training_plans else None
     inital_week = df_plans['week'].iloc[0]
@@ -105,6 +113,8 @@ def trainingplan():
 
 @app.route("/mileagechart", methods=['GET', 'POST'])
 def mileagev2():
+    if not 'user_id' in session:
+        return redirect("/")
     bar_json = bar_chart(previous_week_year(), df_days)
     pie_json = pie_chart(previous_week_year(), df_week)
     week = previous_week_year()
