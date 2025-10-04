@@ -37,8 +37,8 @@ def authorise():
 @app.route("/loaduser")
 def loaduser():
     code = request.args.get('code')
-    token, runner = load_runner(code) 
-    session['user_id'] = runner
+    refresh_token, runner_id = load_runner(code) 
+    session['user_id'] = runner_id
     return redirect("/dash")
 
 @app.route("/mileagelog")
