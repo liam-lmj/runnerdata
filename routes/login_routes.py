@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, redirect, session, request
+from runner import Runner
 from constants import auth_url
 from stravaapi import load_runner, new_access_token, get_activities
 
@@ -11,8 +12,11 @@ def authorise():
 @login_bp.route("/loaduser")
 def loaduser():
     code = request.args.get('code')
-    refresh_token, runner_id = load_runner(code) 
+
+    refresh_token, runner_id = load_runner(code)
+    session['user_id'] = runner_id
+    runner = Runner(runner_id)
+
     access_token = new_access_token(refresh_token)
     activity_list = get_activities(access_token)
-    session['user_id'] = runner_id
     return redirect("/dash")

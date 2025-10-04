@@ -2,11 +2,17 @@ import sqlite3
 from datetime import datetime
 
 class Runner:
-    def __init__(self, id, total_distance, latest_activity, refresh_token):
+    def __init__(self, id):
         self.id = id
-        self.total_distance = total_distance
-        self.latest_activity = datetime.strptime(latest_activity, "%Y-%m-%d %H:%M:%S") #sqllite doesn't support dates so need to convert for class
-        self.refresh_token = refresh_token
+        if self.runner_exists():
+            runner = self.load_from_database()[0]
+            self.total_distance = runner["total_distance"]
+            self.latest_activity = runner["latest_Activity"]
+            self.refresh_token = runner["refresh_token"]
+        else:
+            self.total_distance = 0
+            self.latest_activity = None
+            self.refresh_token = None
     
     def add_activities(self, activities):
         latest_activity = self.latest_activity
@@ -45,6 +51,13 @@ class Runner:
         conn.commit()
         conn.close()
 
-
+    def load_from_database(self):
+        conn = sqlite3.connect('runner.db')
+        conn.row_factory = sqlite3.Row  
+        c = conn.cursor()
+        c.execute(f"SELECT * FROM runner WHERE id = {self.id}")
+        runner = c.fetchall()
+        conn.close()
+        return runner
         
 

@@ -19,8 +19,8 @@ def main():
         raise Exception("No runners found")
     
     for runner_data in runners:
-        runner = Runner(runner_data["id"], runner_data["total_distance"], runner_data["latest_Activity"], runner_data["refresh_token"])
-
+        #runner = Runner(runner_data["id"], runner_data["total_distance"], runner_data["latest_Activity"], runner_data["refresh_token"])
+        runner = Runner(runner_data["id"])
         access_token = new_access_token(runner.refresh_token)
         activities_json = get_activities(access_token)
         
