@@ -34,7 +34,10 @@ def get_activities(access_token):
     activity_list = []
     for activity in response_json:
         activity_id = str(activity["id"])
+        activity_type = str(activity["sport_type"])
         if activity_exists(activity_id):
+            continue
+        if activity_type != "Run":
             continue
         activity_dict = {}
         date_string = activity["start_date"]
