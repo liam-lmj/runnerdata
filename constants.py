@@ -8,7 +8,7 @@ activities_url = "https://www.strava.com/api/v3/athlete/activities"
 laps_url_start = "https://www.strava.com/api/v3/activities/"
 lap_url_end = "/laps"
 
-page_limit = 2 #number of new activities per runner
+page_limit = 80 #number of new activities per runner
 min_miles_conversion = 26.8224 #divide m/s by this to get minutes per mile
 
 #activity fields

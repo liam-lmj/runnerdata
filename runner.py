@@ -18,10 +18,9 @@ class Runner:
         latest_activity = self.latest_activity
         for activity in activities:
             self.total_distance += activity.easy_distance
-            self.total_distance += activity.hard_distance            
-            if latest_activity is None or activity.date > latest_activity:
+            self.total_distance += activity.hard_distance
+            if (latest_activity is None) or (type(latest_activity) == str) or (activity.date > latest_activity):
                 latest_activity = activity.date
-          
         self.latest_activity = latest_activity
 
     def runner_exists(self):

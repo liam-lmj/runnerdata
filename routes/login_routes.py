@@ -25,6 +25,7 @@ def loaduser():
 
     access_token = new_access_token(refresh_token)
     activities_json = get_activities(access_token)
+    print(access_token)
 
     new_activities = []
     activity_weeks = set()

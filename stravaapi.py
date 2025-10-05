@@ -35,8 +35,11 @@ def get_activities(access_token):
     for activity in response_json:
         activity_id = str(activity["id"])
         activity_type = str(activity["sport_type"])
+        print(activity_exists(activity_id))
+        print(activity_id)
         if activity_exists(activity_id):
             continue
+        print(activity_type)
         if activity_type != "Run":
             continue
         activity_dict = {}
@@ -61,7 +64,9 @@ def get_activity_laps(access_token, activity_id):
     lap_list = []
     for lap in response_json:
         lap_dict = {}
-        speed = round(min_miles_conversion / lap["average_speed"], 2)
+        speed = 0
+        if lap["average_speed"] > 0:
+            speed = round(min_miles_conversion / lap["average_speed"], 2)
 
         lap_dict["lap"] = lap["name"]
         lap_dict["distance"] = lap["distance"]
