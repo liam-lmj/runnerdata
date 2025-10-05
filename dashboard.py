@@ -6,69 +6,71 @@ def init_dashboard(server, df_days):
 
     dash_app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], server=server, url_base_pathname="/dash/")
 
-    dash_app.layout = html.Div([
-        html.Div(
-            html.Iframe(
-                src="/bannerdash.html",
-                style={"width": "100%", "height": "110px", "border": "none"}
+    def layout():
+        return html.Div([
+            html.Div(
+                html.Iframe(
+                    src="/bannerdash.html",
+                    style={"width": "100%", "height": "110px", "border": "none"}
+                ),
+                style={"width": "100%"}
             ),
-            style={"width": "100%"}
-        ),
-        dbc.Container([
-            dbc.Row([
-                dbc.Col([
-                    dbc.CardBody([
-                        html.H4("Mileage Graph", className="card-title"),
-                        dcc.Dropdown(
-                            ['total_distance', 'easy_distance', 'hard_distance'],
-                            'total_distance',
-                            id="distance_graph_item"
-                        ),
-                        dcc.Graph(id="distance_graph")
-                    ])
-                ], width=6),
+            dbc.Container([
+                dbc.Row([
+                    dbc.Col([
+                        dbc.CardBody([
+                            html.H4("Mileage Graph", className="card-title"),
+                            dcc.Dropdown(
+                                ['total_distance', 'easy_distance', 'hard_distance'],
+                                'total_distance',
+                                id="distance_graph_item"
+                            ),
+                            dcc.Graph(id="distance_graph")
+                        ])
+                    ], width=6),
 
-                dbc.Col([
-                    dbc.CardBody([
-                        html.H4("Pace Graph", className="card-title"),
-                        dcc.Dropdown(
-                            ['easy_pace', 'hard_pace'],
-                            'hard_pace',
-                            id="pace_graph_item"
-                        ),
-                        dcc.Graph(id="pace_graph")
-                    ])
-                ], width=6)
-            ]),
+                    dbc.Col([
+                        dbc.CardBody([
+                            html.H4("Pace Graph", className="card-title"),
+                            dcc.Dropdown(
+                                ['easy_pace', 'hard_pace'],
+                                'hard_pace',
+                                id="pace_graph_item"
+                            ),
+                            dcc.Graph(id="pace_graph")
+                        ])
+                    ], width=6)
+                ]),
 
-            dbc.Row([
-                dbc.Col([
-                    dbc.CardBody([
-                        html.H4("Daily Mileage", className="card-title"),
-                        dcc.Dropdown(
-                            sorted(df_days["week"].unique(), reverse=True),
-                            sorted(df_days["week"].unique(), reverse=True)[0],
-                            id="days_graph_item"
-                        ),
-                        dcc.Graph(id="days_graph")
-                    ])
-                ], width=6),
+                dbc.Row([
+                    dbc.Col([
+                        dbc.CardBody([
+                            html.H4("Daily Mileage", className="card-title"),
+                            dcc.Dropdown(
+                                sorted(df_days["week"].unique(), reverse=True),
+                                sorted(df_days["week"].unique(), reverse=True)[0],
+                                id="days_graph_item"
+                            ),
+                            dcc.Graph(id="days_graph")
+                        ])
+                    ], width=6),
 
-                dbc.Col([
-                    dbc.CardBody([
-                        html.H4("Daily Session Pace Trend", className="card-title"),
-                        dcc.Dropdown(
-                            sorted(df_days["week"].unique(), reverse=True),
-                            sorted(df_days["week"].unique(), reverse=True)[0],
-                            id="daily_pace_graph_item"
-                        ),
-                        dcc.Graph(id="daily_pace_graph")
-                    ])
-                ], width=6)
+                    dbc.Col([
+                        dbc.CardBody([
+                            html.H4("Daily Session Pace Trend", className="card-title"),
+                            dcc.Dropdown(
+                                sorted(df_days["week"].unique(), reverse=True),
+                                sorted(df_days["week"].unique(), reverse=True)[0],
+                                id="daily_pace_graph_item"
+                            ),
+                            dcc.Graph(id="daily_pace_graph")
+                        ])
+                    ], width=6)
+                ])
             ])
         ])
-    ])
 
+    dash_app.layout = layout
 
     dash_callbacks.register_callbacks(dash_app)
 
