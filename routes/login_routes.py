@@ -1,5 +1,8 @@
 from flask import Blueprint, render_template, redirect, session, request
 from runner import Runner
+from activity import Activity
+from week import Week
+from database import update_pending_plans
 from constants import auth_url
 from stravaapi import load_runner, new_access_token, get_activities
 
@@ -17,6 +20,33 @@ def loaduser():
     session['user_id'] = runner_id
     runner = Runner(runner_id)
 
+    if not runner.runner_exists():
+        runner.insert_runner()
+
     access_token = new_access_token(refresh_token)
-    activity_list = get_activities(access_token)
+    activities_json = get_activities(access_token)
+
+    new_activities = []
+    activity_weeks = set()
+
+    for activity_dict in activities_json:
+        activity = Activity(activity_dict)
+        if not activity.activity_exists():
+            activity.insert_activity()
+            new_activities.append(activity)
+            week_year = activity.date.strftime("%W-%Y")
+            activity_weeks.add(week_year)
+
+    runner.add_activities(new_activities)
+    runner.update_runner()
+
+    for week_year in activity_weeks:
+        week = Week(week_year, runner.id)
+        if week.week_exists():
+            week.update_week()
+        else:
+            week.insert_week()
+
+    update_pending_plans(runner.id)
+
     return redirect("/dash")
