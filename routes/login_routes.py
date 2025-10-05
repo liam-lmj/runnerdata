@@ -51,3 +51,8 @@ def loaduser():
     update_pending_plans(runner.id)
 
     return redirect("/dash")
+
+@login_bp.route("/demo")
+def demo():
+    session['user_id'] = 34892346
+    return redirect("/dash")
