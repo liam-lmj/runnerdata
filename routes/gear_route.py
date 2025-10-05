@@ -9,8 +9,8 @@ gear_bp = Blueprint('gear', __name__)
 def gear():
     if not 'user_id' in session:
         return redirect("/")
-
-    running_gear = get_running_gear()
+    runner = session['user_id']
+    running_gear = get_running_gear(runner)
     if request.method == "POST":
         gear_updates = request.json
         gear_id = None
@@ -30,7 +30,7 @@ def gear():
             gear.update_gear()
         else:
             gear = Gear(gear_updates["trainer"],
-                        "34892346",
+                        runner,
                         float(gear_updates["miles"]),
                         "Active",
                         gear_updates["default_type"])

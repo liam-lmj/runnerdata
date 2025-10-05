@@ -62,11 +62,11 @@ def get_plan_data(runner):
     conn.close()
     return plans
 
-def get_running_gear():
+def get_running_gear(runner):
     conn = sqlite3.connect('runner.db')
     conn.row_factory = dict_factory  
     c = conn.cursor()
-    c.execute("SELECT * FROM gear")
+    c.execute(f"SELECT * FROM gear WHERE runner = {runner}")
     gear = c.fetchall()
     conn.close()
     return gear
