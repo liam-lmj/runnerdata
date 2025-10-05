@@ -22,7 +22,7 @@ app.register_blueprint(training_bp)
 app.register_blueprint(login_bp)
 
 current_week = current_week_year()
-week_data = get_week_data('34892346')
+week_data = get_week_data('22726229')
 df_week = pd.DataFrame(map(dict, week_data))
 df_days = pd.DataFrame(get_days_day(week_data))
 

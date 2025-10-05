@@ -12,9 +12,9 @@ training_bp = Blueprint('training', __name__)
 def trainingplan():
     if not 'user_id' in session:
         return redirect("/")
-    training_plans = get_plan_data()
-    df_plans = pd.DataFrame(get_plan_data()) if training_plans else None
-    inital_week = df_plans['week'].iloc[0]
+    training_plans = get_plan_data(session['user_id'])
+    df_plans = pd.DataFrame(get_plan_data(session['user_id'])) if training_plans else None
+    inital_week = df_plans['week'].iloc[0] if training_plans else None
 
     bar_json_plans = bar_chart_plan(inital_week, df_plans) if training_plans else None
 
@@ -26,7 +26,7 @@ def trainingplan():
                 plan.update_vs_week()
             else:
                 plan.insert_plan()
-            training_plans = get_plan_data()
+            training_plans = get_plan_data(session['user_id'])
             return jsonify({"success": True, "training_plans": training_plans})
         
         elif request.json["type"] == "updateChart":

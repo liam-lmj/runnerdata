@@ -53,11 +53,11 @@ def update_pending_plans(runner):
         else:
             plan.insert_plan()
 
-def get_plan_data():
+def get_plan_data(runner):
     conn = sqlite3.connect('runner.db')
     conn.row_factory = dict_factory  
     c = conn.cursor()
-    c.execute("SELECT * FROM plan ORDER BY week ASC")
+    c.execute(f"SELECT * FROM plan WHERE runner = {runner} ORDER BY week ASC")
     plans = c.fetchall()
     conn.close()
     return plans
