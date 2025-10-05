@@ -3,7 +3,7 @@ import pandas as pd
 from appdata import current_week_year
 from flask import Flask, send_from_directory
 from dashboard import init_dashboard
-from database import get_week_data, get_days_day
+from database import get_week_data_all, get_days_day
 from dotenv import load_dotenv
 from routes.mileage_routes import mileage_log_bp
 from routes.gear_route import gear_bp
@@ -22,11 +22,10 @@ app.register_blueprint(training_bp)
 app.register_blueprint(login_bp)
 
 current_week = current_week_year()
-week_data = get_week_data('22726229')
-df_week = pd.DataFrame(map(dict, week_data))
+week_data = get_week_data_all()
 df_days = pd.DataFrame(get_days_day(week_data))
 
-init_dashboard(app, df_week, df_days)
+init_dashboard(app, df_days)
 
 #to deliver banner to dash app
 @app.route("/bannerdash.html")

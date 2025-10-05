@@ -17,6 +17,15 @@ def get_week_data(runner):
     conn.close()
     return weeks
 
+def get_week_data_all():
+    conn = sqlite3.connect('runner.db')
+    conn.row_factory = sqlite3.Row  
+    c = conn.cursor()
+    c.execute(f"SELECT * FROM week ORDER BY week ASC")
+    weeks = c.fetchall()
+    conn.close()
+    return weeks
+
 def get_days_day(weeks):
     days_dict = {
     "week": [],

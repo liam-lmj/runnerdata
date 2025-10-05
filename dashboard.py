@@ -3,10 +3,9 @@ import plotly.express as px
 import dash_bootstrap_components as dbc
 import dash
 import dash_callbacks
-from dash import Dash, html, dash_table, dcc, callback, Output, Input
-from database import get_week_data, get_days_day
+from dash import Dash, html, dcc
 
-def init_dashboard(server, df_week, df_days):
+def init_dashboard(server, df_days):
 
     dash_app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], server=server, url_base_pathname="/dash/")
 
@@ -74,6 +73,6 @@ def init_dashboard(server, df_week, df_days):
     ])
 
 
-    dash_callbacks.register_callbacks(dash_app, df_week, df_days)
+    dash_callbacks.register_callbacks(dash_app)
 
     return dash_app
