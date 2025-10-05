@@ -8,11 +8,11 @@ def dict_factory(cursor, row):
     return d
 
 #TODO need to add user to the sql calls to support multiple data in the future
-def get_week_data():
+def get_week_data(runner):
     conn = sqlite3.connect('runner.db')
     conn.row_factory = sqlite3.Row  
     c = conn.cursor()
-    c.execute("SELECT * FROM week ORDER BY week ASC")
+    c.execute(f"SELECT * FROM week WHERE runner_id = {runner} ORDER BY week ASC")
     weeks = c.fetchall()
     conn.close()
     return weeks
