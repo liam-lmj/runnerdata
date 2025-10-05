@@ -12,8 +12,9 @@ training_bp = Blueprint('training', __name__)
 def trainingplan():
     if not 'user_id' in session:
         return redirect("/")
-    training_plans = get_plan_data(session['user_id'])
-    df_plans = pd.DataFrame(get_plan_data(session['user_id'])) if training_plans else None
+    runner = session['user_id']
+    training_plans = get_plan_data(runner)
+    df_plans = pd.DataFrame(get_plan_data(runner)) if training_plans else None
     inital_week = df_plans['week'].iloc[0] if training_plans else None
 
     bar_json_plans = bar_chart_plan(inital_week, df_plans) if training_plans else None
@@ -26,7 +27,7 @@ def trainingplan():
                 plan.update_vs_week()
             else:
                 plan.insert_plan()
-            training_plans = get_plan_data(session['user_id'])
+            training_plans = get_plan_data(runner)
             return jsonify({"success": True, "training_plans": training_plans})
         
         elif request.json["type"] == "updateChart":
@@ -34,4 +35,9 @@ def trainingplan():
             bar_json_plans = bar_chart_plan(week, df_plans)
             return jsonify({"success": True, "bar_json": bar_json_plans})
 
-    return render_template("training.html", training_plans=training_plans, bar_json_plans=bar_json_plans,current_week=inital_week, next_five_weeks=next_five_weeks) 
+    return render_template("training.html", 
+                           training_plans=training_plans, 
+                           bar_json_plans=bar_json_plans,
+                           current_week=inital_week, 
+                           next_five_weeks=next_five_weeks, 
+                           runner=runner) 

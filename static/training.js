@@ -6,6 +6,7 @@ let trainingPlans = trainingPlansData;
 const nextWeeks = nextFiveWeeks;
 const daysOfWeek = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
 const popupAdd = document.getElementById("popup_add_plan");
+const runner = runner_id;
 
 const initalHtml = `<form class="training-form-container"id="popup_add_plan_form">
                         <h1 class="form-header">Add Plan</h1>
@@ -143,6 +144,7 @@ function addAndClose() {
   const sunday = document.getElementById("sunday_miles").value;
   const total = Number(monday) + Number(tuesday) + Number(wednesday) + 
                 Number(thursday) + Number(friday) + Number(saturday) + Number(sunday);
+
   let sessions = [];
 
   for (let i = 1; i < counter; i++) {
@@ -162,7 +164,7 @@ function addAndClose() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type: "addPlan", weekNewPlan, monday, tuesday, wednesday, thursday, 
                              friday, saturday, sunday, total, sessions,
-                             runner: "34892346", current: "true", achieved: "pending" })
+                             runner, current: "true", achieved: "pending" })
   })
   .then(response => response.json())
   .then(data => {

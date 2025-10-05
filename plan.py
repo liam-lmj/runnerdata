@@ -30,7 +30,7 @@ class Plan:
     def plan_exists(self):
         conn = sqlite3.connect('runner.db')
         c = conn.cursor()
-        c.execute(f"SELECT * FROM plan WHERE week = '{self.week}'")
+        c.execute(f"SELECT * FROM plan WHERE week = '{self.week}' and runner = {self.runner}")
         exists = c.fetchone()
         conn.close()
         if exists:
