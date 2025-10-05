@@ -9,6 +9,7 @@ from routes.mileage_routes import mileage_log_bp
 from routes.gear_route import gear_bp
 from routes.training_route import training_bp
 from routes.login_routes import login_bp
+from routes.user_settings_route import setting_bp
 
 load_dotenv()
 
@@ -20,6 +21,7 @@ app.register_blueprint(mileage_log_bp)
 app.register_blueprint(gear_bp)
 app.register_blueprint(training_bp)
 app.register_blueprint(login_bp)
+app.register_blueprint(setting_bp)
 
 current_week = current_week_year()
 week_data = get_week_data_all()
