@@ -64,12 +64,23 @@ def get_weekly_mileage(week_data):
 
 def pie_chart(week, df_week):
     filtered_df_weeks = (df_week[df_week['week'] == week])
+    easy_distance = float(filtered_df_weeks['easy_distance'].sum()) / mile_conversion
+    hard_distance = float(filtered_df_weeks['hard_distance'].sum()) / mile_conversion
+    total = round(easy_distance + hard_distance, 2)
     pie_df = ({
         'Types': ['Easy Miles', 'Hard Miles'],
-        'Distance': [float(filtered_df_weeks['easy_distance'].sum() / mile_conversion),
-                    float(filtered_df_weeks['hard_distance'].sum() / mile_conversion)]
+        'Distance': [easy_distance, hard_distance]
     })
-    fig_pie = px.pie(pie_df, names="Types", values="Distance")
+    fig_pie = px.pie(pie_df, names="Types", values="Distance", hole=.6)
+
+    fig_pie.add_annotation(
+    text=f"{total} Miles",
+    x=0.5,
+    y=0.5,
+    showarrow=False,
+    font_size=18,
+    )
+
     pie_json = json.dumps(fig_pie, cls=plotly.utils.PlotlyJSONEncoder)
     return pie_json
 
