@@ -3,6 +3,7 @@ import pandas as pd
 from database import get_week_data, get_days_day
 from dash import Input, Output
 from flask import session
+from constants import days_of_week, week_order
 
 def register_callbacks(dash_app):
     @dash_app.callback(
@@ -15,8 +16,13 @@ def register_callbacks(dash_app):
         runner = session['user_id']
         week_data = get_week_data(runner)
         filtered_df = pd.DataFrame(map(dict, week_data))
+        filtered_df.rename(columns={'easy_distance': 'Easy Distance', 
+                                    'hard_distance': 'Hard Distance', 
+                                    'total_distance': 'Total Distance', 
+                                    'week': 'Week'}, 
+                                    inplace=True)
 
-        fig = px.bar(filtered_df, x="week", y=col_chosen, title="Weekly Mileage")
+        fig = px.bar(filtered_df, x="Week", y=col_chosen, title="Weekly Mileage")
         return fig
 
     @dash_app.callback(
@@ -29,8 +35,12 @@ def register_callbacks(dash_app):
         runner = session['user_id']
         week_data = get_week_data(runner)
         filtered_df = pd.DataFrame(map(dict, week_data))
+        filtered_df.rename(columns={'easy_pace': 'Easy Pace', 
+                                    'hard_pace': 'Hard Pace', 
+                                    'week': 'Week'}, 
+                                    inplace=True)
 
-        fig = px.line(filtered_df, x="week", y=col_chosen, title="Pace Trend")
+        fig = px.line(filtered_df, x="Week", y=col_chosen, title="Pace Trend")
         return fig
 
     @dash_app.callback(
@@ -43,9 +53,11 @@ def register_callbacks(dash_app):
         runner = session['user_id']
         week_data = get_week_data(runner)
         df_days = pd.DataFrame(get_days_day(week_data))
+        df_days['Day'] = df_days['day'].map(days_of_week)
         filtered_df = df_days[(df_days['week'] == col_week)]
+        filtered_df.rename(columns={'total_distance': 'Total Distance'}, inplace=True)
 
-        fig = px.pie(filtered_df, values="total_distance", names="day", title="Days Distribution")
+        fig = px.pie(filtered_df, values="Total Distance", names="Day", title="Days Distribution")
         return fig
 
     @dash_app.callback(
@@ -58,7 +70,9 @@ def register_callbacks(dash_app):
         runner = session['user_id']
         week_data = get_week_data(runner)
         df_days = pd.DataFrame(get_days_day(week_data))
+        df_days['Day'] = df_days['day'].map(days_of_week)
         filtered_df = df_days[(df_days['week'] == col_week) & (df_days['hard_pace'] > 0)]
+        filtered_df.rename(columns={'hard_pace': 'Hard Pace'}, inplace=True)
 
-        fig = px.line(filtered_df, x="day", y="hard_pace", title="Daily Session Pace Trend")
+        fig = px.line(filtered_df, x="Day", y="Hard Pace", title="Daily Session Pace Trend")
         return fig

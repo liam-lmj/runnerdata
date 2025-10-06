@@ -21,8 +21,8 @@ def init_dashboard(server, df_days):
                         dbc.CardBody([
                             html.H4("Mileage Graph", className="card-title"),
                             dcc.Dropdown(
-                                ['total_distance', 'easy_distance', 'hard_distance'],
-                                'total_distance',
+                                ['Total Distance', 'Easy Distance', 'Hard Distance'],
+                                'Total Distance',
                                 id="distance_graph_item"
                             ),
                             dcc.Graph(id="distance_graph")
@@ -33,8 +33,8 @@ def init_dashboard(server, df_days):
                         dbc.CardBody([
                             html.H4("Pace Graph", className="card-title"),
                             dcc.Dropdown(
-                                ['easy_pace', 'hard_pace'],
-                                'hard_pace',
+                                ['Easy Pace', 'Hard Pace'],
+                                'Hard Pace',
                                 id="pace_graph_item"
                             ),
                             dcc.Graph(id="pace_graph")
