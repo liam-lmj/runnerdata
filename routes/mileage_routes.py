@@ -31,5 +31,7 @@ def mileagev2():
         bar_json = bar_chart(week, df_days)
         pie_json = pie_chart(week, df_week)
         return jsonify({"success": True, "bar_json": bar_json, "pie_json": pie_json})
+    
+    print(weekly_mileage)
 
     return render_template("mileagechart.html", bar_json=bar_json, pie_json=pie_json, weekly_mileage=weekly_mileage, week=week)

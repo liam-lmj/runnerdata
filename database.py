@@ -1,5 +1,6 @@
 import sqlite3
 from plan import Plan
+from constants import mile_conversion
 
 def dict_factory(cursor, row): 
     d = {}
@@ -10,20 +11,28 @@ def dict_factory(cursor, row):
 #TODO need to add user to the sql calls to support multiple data in the future
 def get_week_data(runner):
     conn = sqlite3.connect('runner.db')
-    conn.row_factory = sqlite3.Row  
+    conn.row_factory = dict_factory 
     c = conn.cursor()
     c.execute(f"SELECT * FROM week WHERE runner_id = {runner} ORDER BY week ASC")
     weeks = c.fetchall()
     conn.close()
+    for week in weeks:
+        week["total_distance"] /= mile_conversion if type(week["total_distance"]) == float else 0
+        week["easy_distance"] /= mile_conversion if type(week["easy_distance"]) == float else 0
+        week["hard_distance"] /= mile_conversion if type(week["hard_distance"]) == float else 0
     return weeks
 
 def get_week_data_all():
     conn = sqlite3.connect('runner.db')
-    conn.row_factory = sqlite3.Row  
+    conn.row_factory = dict_factory 
     c = conn.cursor()
     c.execute(f"SELECT * FROM week ORDER BY week ASC")
     weeks = c.fetchall()
     conn.close()
+    for week in weeks:
+        week["total_distance"] /= mile_conversion if type(week["total_distance"]) == float else 0
+        week["easy_distance"] /= mile_conversion if type(week["easy_distance"]) == float else 0
+        week["hard_distance"] /= mile_conversion if type(week["hard_distance"]) == float else 0
     return weeks
 
 def get_days_day(weeks):
@@ -39,10 +48,13 @@ def get_days_day(weeks):
         days = eval(row["days"])
 
         for day in days:
+            total_distance = days[day]["total_distance"] / mile_conversion if type(days[day]["total_distance"]) == float else 0
+            hard_pace = days[day]["hard_pace"]
+
             days_dict["week"].append(week)
             days_dict["day"].append(day)
-            days_dict["total_distance"].append(days[day]["total_distance"])
-            days_dict["hard_pace"].append(days[day]["hard_pace"])
+            days_dict["total_distance"].append(total_distance)
+            days_dict["hard_pace"].append(hard_pace)
 
     return days_dict
 

@@ -21,9 +21,9 @@ function renderTable(week, mileageData) {
             if (key === "week" || key === "Total") continue;
             row += "<td>";
             row += "<div class='center-text'>" + key + "</div>";
-            row += "Easy distance: " + Math.round(100 * (value["easy_distance"] / 1609)) / 100 + "<br>";
-            row += "Hard distance: " + Math.round(100 * (value["hard_distance"] / 1609)) / 100 + "<br>";
-            row += "Total distance: " + Math.round(100 * (value["total_distance"] / 1609)) / 100 + "<br>";
+            row += "Easy distance: " + Math.round(100 * (value["easy_distance"])) / 100 + "<br>";
+            row += "Hard distance: " + Math.round(100 * (value["hard_distance"])) / 100 + "<br>";
+            row += "Total distance: " + Math.round(100 * (value["total_distance"])) / 100 + "<br>";
             row += "</td>";
         }
         row += "</tr>";

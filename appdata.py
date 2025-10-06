@@ -40,6 +40,10 @@ def get_weekly_mileage(week_data):
         hard_pace = 0
         for day in week_order:
             if day in days_dict:
+                days_dict[day]["total_distance"] /= mile_conversion if type(days_dict[day]["total_distance"]) == float else 0
+                days_dict[day]["easy_distance"] /= mile_conversion if type(days_dict[day]["easy_distance"]) == float else 0
+                days_dict[day]["hard_distance"] /= mile_conversion if type(days_dict[day]["hard_distance"]) == float else 0
+
                 sorted_dict[days_of_week[day]] = days_dict[day]
                 total_distance += days_dict[day]["total_distance"]
                 easy_distance += days_dict[day]["easy_distance"]
@@ -64,8 +68,8 @@ def get_weekly_mileage(week_data):
 
 def pie_chart(week, df_week):
     filtered_df_weeks = (df_week[df_week['week'] == week])
-    easy_distance = float(filtered_df_weeks['easy_distance'].sum()) / mile_conversion
-    hard_distance = float(filtered_df_weeks['hard_distance'].sum()) / mile_conversion
+    easy_distance = float(filtered_df_weeks['easy_distance'].sum()) 
+    hard_distance = float(filtered_df_weeks['hard_distance'].sum()) 
     total = round(easy_distance + hard_distance, 2)
     pie_df = ({
         'Types': ['Easy Miles', 'Hard Miles'],
@@ -87,7 +91,7 @@ def pie_chart(week, df_week):
 
 def bar_chart(week, df_days):
     filtered_df_days = (df_days[df_days['week'] == week]
-                .assign(Miles=lambda x: round(x['total_distance'] / mile_conversion, 2))
+                .assign(Miles=lambda x: round(x['total_distance'], 2))
                 .assign(Days=lambda x: x['day'].map(days_of_week))
                 .assign(order=lambda x: x['day'].map({day: i for i, day in enumerate(week_order)}))
                 .sort_values('order')

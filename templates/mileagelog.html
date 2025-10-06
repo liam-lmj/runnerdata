@@ -20,9 +20,9 @@
                 {% if not loop.last %}
                     <td>
                         <div class="center-text">{{ day }}</div>
-                        Easy distance: {{ '%0.2f'| format(data.easy_distance/1609|float) }}<br> 
-                        Hard distance: {{ '%0.2f'| format(data.hard_distance/1609|float) }}<br>
-                        Total distance: {{ '%0.2f'| format(data.total_distance/1609|float) }}<br>
+                        Easy distance: {{ '%0.2f'| format(data.easy_distance|float) }}<br> 
+                        Hard distance: {{ '%0.2f'| format(data.hard_distance|float) }}<br>
+                        Total distance: {{ '%0.2f'| format(data.total_distance|float) }}<br>
                         Hard pace: {{ data.hard_pace }}<br>
                     </td>
                 {% endif %}

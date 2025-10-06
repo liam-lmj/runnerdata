@@ -3,7 +3,7 @@ import pandas as pd
 from database import get_week_data, get_days_day
 from dash import Input, Output
 from flask import session
-from constants import days_of_week, week_order
+from constants import days_of_week
 
 def register_callbacks(dash_app):
     @dash_app.callback(
