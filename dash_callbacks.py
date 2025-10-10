@@ -56,8 +56,8 @@ def register_callbacks(dash_app):
         df_days['Day'] = df_days['day'].map(days_of_week)
         filtered_df = df_days[(df_days['week'] == col_week)]
         filtered_df.rename(columns={'total_distance': 'Total Distance'}, inplace=True)
-
-        fig = px.pie(filtered_df, values="Total Distance", names="Day", title="Days Distribution")
+        order = list(days_of_week.values())
+        fig = px.pie(filtered_df, values="Total Distance", names="Day", title="Days Distribution", category_orders={"Day": order})
         return fig
 
     @dash_app.callback(
@@ -73,6 +73,11 @@ def register_callbacks(dash_app):
         df_days['Day'] = df_days['day'].map(days_of_week)
         filtered_df = df_days[(df_days['week'] == col_week) & (df_days['hard_pace'] > 0)]
         filtered_df.rename(columns={'hard_pace': 'Hard Pace'}, inplace=True)
-
-        fig = px.line(filtered_df, x="Day", y="Hard Pace", title="Daily Session Pace Trend")
+        order = list(days_of_week.values())
+        present_days = filtered_df['Day']
+        present_days_order = []
+        for day in order:
+            if day in list(present_days):
+                present_days_order.append(day)
+        fig = px.line(filtered_df, x="Day", y="Hard Pace", title="Daily Session Pace Trend", category_orders={"Day": present_days_order})
         return fig
