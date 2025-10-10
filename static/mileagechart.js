@@ -16,9 +16,9 @@ function renderTable(week, mileageData) {
         for (const key of daysOfWeek) {
             orderedMileage[key] = weekly_mileage[key];
         }
-
+        console.log(orderedMileage);
         for (const [key, value] of Object.entries(orderedMileage)) {
-            if (key === "week" || key === "Total") continue;
+            if (key === "week" || key === "Total" || value === undefined) continue;
             row += "<td>";
             row += "<div class='center-text'>" + key + "</div>";
             row += "Easy distance: " + Math.round(100 * (value["easy_distance"])) / 100 + "<br>";

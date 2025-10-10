@@ -58,7 +58,7 @@ def get_weekly_mileage(week_data):
                                 "hard_distance": hard_distance,
                                 "hard_pace": hard_pace}
 
-        if len(days_dict) == days_in_week:
+        if len(days_dict) > 0:
             sorted_dict["week"] = week["week"]
             weekly_mileage.append(sorted_dict)
 
