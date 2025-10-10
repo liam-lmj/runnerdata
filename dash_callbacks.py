@@ -1,5 +1,6 @@
 import plotly.express as px
 import pandas as pd 
+import numpy as np
 from database import get_week_data, get_days_day
 from dash import Input, Output
 from flask import session
@@ -21,7 +22,6 @@ def register_callbacks(dash_app):
                                     'total_distance': 'Total Distance', 
                                     'week': 'Week'}, 
                                     inplace=True)
-
         fig = px.bar(filtered_df, x="Week", y=col_chosen, title="Weekly Mileage")
         return fig
 

@@ -57,7 +57,7 @@ class Gear:
         c = conn.cursor()
         c.execute(f"""UPDATE gear SET 
                     default_type = 'None' 
-                    WHERE (gear_id != {self.gear_id}) AND (default_type = '{self.default_type}')
+                    WHERE (gear_id != {self.gear_id}) AND (default_type = '{self.default_type}') AND (runner = '{self.runner}')
                     """)
         conn.commit()
         conn.close()
