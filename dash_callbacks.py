@@ -41,6 +41,8 @@ def register_callbacks(dash_app):
                                     inplace=True)
 
         fig = px.line(filtered_df, x="Week", y=col_chosen, title="Pace Trend")
+        fig.update_yaxes(autorange="reversed")
+
         return fig
 
     @dash_app.callback(
@@ -80,4 +82,5 @@ def register_callbacks(dash_app):
             if day in list(present_days):
                 present_days_order.append(day)
         fig = px.line(filtered_df, x="Day", y="Hard Pace", title="Daily Session Pace Trend", category_orders={"Day": present_days_order})
+        fig.update_yaxes(autorange="reversed")
         return fig
