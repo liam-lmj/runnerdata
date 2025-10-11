@@ -17,9 +17,13 @@ def get_week_data(runner):
     weeks = c.fetchall()
     conn.close()
     for week in weeks:
-        week["total_distance"] /= mile_conversion if type(week["total_distance"]) == float else 0
-        week["easy_distance"] /= mile_conversion if type(week["easy_distance"]) == float else 0
-        week["hard_distance"] /= mile_conversion if type(week["hard_distance"]) == float else 0
+        week["total_distance"] = round(week["total_distance"] / mile_conversion, 2) if isinstance(week["total_distance"], (float, int)) else 0
+        week["easy_distance"] = round(week["easy_distance"] / mile_conversion, 2) if isinstance(week["easy_distance"], (float, int)) else 0
+        week["hard_distance"] = round(week["hard_distance"] / mile_conversion, 2) if isinstance(week["hard_distance"], (float, int)) else 0
+        week["lt1_distance"] = round(week["lt1_distance"] / mile_conversion, 2) if isinstance(week["lt1_distance"], (float, int)) else 0
+        week["lt2_distance"] = round(week["lt2_distance"] / mile_conversion, 2) if isinstance(week["lt2_distance"], (float, int)) else 0
+        week["hard_reps_long_distance"] = round(week["hard_reps_long_distance"] / mile_conversion, 2) if isinstance(week["hard_reps_long_distance"], (float, int)) else 0
+        week["hard_reps_short_distance"] = round(week["hard_reps_short_distance"] / mile_conversion, 2) if isinstance(week["hard_reps_short_distance"], (float, int)) else 0
     return weeks
 
 def get_week_data_all():

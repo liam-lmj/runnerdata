@@ -19,8 +19,12 @@ def register_callbacks(dash_app):
         filtered_df = pd.DataFrame(map(dict, week_data))
         print(filtered_df)
         filtered_df.rename(columns={'easy_distance': 'Easy Distance', 
-                                    'hard_distance': 'Hard Distance', 
-                                    'total_distance': 'Total Distance', 
+                                    'hard_distance': 'Total Hard Distance', 
+                                    'total_distance': 'Total Distance',
+                                    'lt1_distance': 'LT1 Distance',
+                                    'lt2_distance': 'LT2 Distance',
+                                    'hard_reps_long_distance': 'Long Reps Distance',
+                                    'hard_reps_short_distance': 'Short Reps Distance',
                                     'week': 'Week'}, 
                                     inplace=True)
         fig = px.bar(filtered_df, x="Week", y=col_chosen, title="Weekly Mileage")
@@ -38,6 +42,10 @@ def register_callbacks(dash_app):
         filtered_df = pd.DataFrame(map(dict, week_data))
         filtered_df.rename(columns={'easy_pace': 'Easy Pace', 
                                     'hard_pace': 'Hard Pace', 
+                                    'lt1_pace': 'LT1 Pace',
+                                    'lt2_pace': 'LT2 Pace',
+                                    'hard_reps_long_pace': 'Long Reps Pace',
+                                    'hard_reps_short_pace': 'Short Reps Pace',
                                     'week': 'Week'}, 
                                     inplace=True)
 
