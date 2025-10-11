@@ -17,6 +17,7 @@ def register_callbacks(dash_app):
         runner = session['user_id']
         week_data = get_week_data(runner)
         filtered_df = pd.DataFrame(map(dict, week_data))
+        print(filtered_df)
         filtered_df.rename(columns={'easy_distance': 'Easy Distance', 
                                     'hard_distance': 'Hard Distance', 
                                     'total_distance': 'Total Distance', 

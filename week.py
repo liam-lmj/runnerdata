@@ -16,6 +16,18 @@ class Week:
         self.hard_time = 0
         self.easy_time = 0
         self.easy_pace = 0
+        self.lt1_distance = 0
+        self.lt2_distance = 0
+        self.lt1_pace = 0
+        self.lt2_pace = 0
+        self.hard_reps_long_distance = 0
+        self.hard_reps_short_distance = 0
+        self.hard_reps_long_pace = 0
+        self.hard_reps_short_pace = 0
+        self.lt1_time = 0
+        self.lt2_time = 0
+        self.hard_reps_long_time = 0
+        self.hard_reps_short_time = 0
         self.days = {}
         self.set_up_total_attributes()
 
@@ -112,6 +124,14 @@ class Week:
             self.total_distance += (easy_distance + hard_distance)
             self.hard_distance += hard_distance
             self.easy_distance += easy_distance
+            self.lt1_distance += lt1_distance
+            self.lt2_distance += lt2_distance
+            self.hard_reps_long_distance += hard_reps_long_distance
+            self.hard_reps_short_distance += hard_reps_short_distance
+            self.lt1_time += lt1_time
+            self.lt2_time += lt2_time
+            self.hard_reps_long_time += hard_reps_long_time
+            self.hard_reps_short_time += hard_reps_short_time
             self.run_count += 1
             self.hard_time += hard_time
             self.easy_time += easy_time
@@ -155,8 +175,22 @@ class Week:
         
         if self.hard_distance > 0 and self.hard_time > 0:
             self.hard_pace = round(min_miles_conversion / (self.hard_distance / self.hard_time), 2)
+
         if self.easy_distance and self.easy_time > 0:
             self.easy_pace = round(min_miles_conversion / (self.easy_distance / self.easy_time), 2)
+
+        if self.lt1_distance > 0 and self.lt1_time > 0:
+            self.lt1_pace = round(min_miles_conversion / (self.lt1_distance / self.lt1_time), 2)
+
+        if self.lt2_distance > 0 and self.lt2_time > 0:
+            self.lt2_pace = round(min_miles_conversion / (self.lt2_distance / self.lt2_time), 2)
+
+        if self.hard_reps_long_distance > 0 and self.hard_reps_long_time > 0:
+            self.hard_reps_long_pace = round(min_miles_conversion / (self.hard_reps_long_distance / self.hard_reps_long_time), 2)
+
+        if self.hard_reps_short_distance > 0 and self.hard_reps_short_time > 0:
+            self.hard_reps_short_pace = round(min_miles_conversion / (self.hard_reps_short_distance / self.hard_reps_short_time), 2)
+
         self.days = days 
 
     def week_exists(self):
@@ -173,39 +207,85 @@ class Week:
     def insert_week(self):
         conn = sqlite3.connect('runner.db')
         c = conn.cursor()
-        c.execute(f"""INSERT INTO week VALUES 
-                  ('{self.week}', 
-                  {self.runner_id}, 
-                  {self.total_distance},
-                  {self.hard_distance},
-                  {self.easy_distance},
-                  {self.session_count},
-                  {self.hard_pace},
-                  {self.run_count},
-                  '{json.dumps(self.days)}',
-                  {self.hard_time},
-                  {self.easy_pace},
-                  {self.easy_time})
-                  """)
+        c.execute("""
+            INSERT INTO week (
+                week, runner_id, total_distance, hard_distance, easy_distance, session_count,
+                hard_pace, run_count, days, hard_time, easy_pace, easy_time,
+                lt1_distance, lt2_distance, lt1_pace, lt2_pace,
+                hard_reps_long_distance, hard_reps_short_distance, hard_reps_long_pace, hard_reps_short_pace
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                self.week,
+                self.runner_id,
+                self.total_distance,
+                self.hard_distance,
+                self.easy_distance,
+                self.session_count,
+                self.hard_pace,
+                self.run_count,
+                json.dumps(self.days),
+                self.hard_time,
+                self.easy_pace,
+                self.easy_time,
+                self.lt1_distance,
+                self.lt2_distance,
+                self.lt1_pace,
+                self.lt2_pace,
+                self.hard_reps_long_distance,
+                self.hard_reps_short_distance,
+                self.hard_reps_long_pace,
+                self.hard_reps_short_pace
+            ))
         conn.commit()
         conn.close()
-        
+
+
     def update_week(self):
         conn = sqlite3.connect('runner.db')
         c = conn.cursor()
-        c.execute(f"""UPDATE week SET 
-                    runner_id = {self.runner_id},
-                    total_distance = {self.total_distance},
-                    hard_distance = {self.hard_distance},
-                    easy_distance = {self.easy_distance},
-                    session_count = {self.session_count},
-                    hard_pace = {self.hard_pace},
-                    run_count = {self.run_count},
-                    days = '{json.dumps(self.days)}',
-                    hard_time = {self.hard_time},
-                    easy_pace = {self.easy_pace},
-                    easy_time = {self.easy_time}
-                    WHERE week = '{self.week}'
-                    """)
+        c.execute("""
+            UPDATE week SET 
+                runner_id = ?,
+                total_distance = ?,
+                hard_distance = ?,
+                easy_distance = ?,
+                session_count = ?,
+                hard_pace = ?,
+                run_count = ?,
+                days = ?,
+                hard_time = ?,
+                easy_pace = ?,
+                easy_time = ?,
+                lt1_distance = ?,
+                lt2_distance = ?,
+                lt1_pace = ?,
+                lt2_pace = ?,
+                hard_reps_long_distance = ?,
+                hard_reps_short_distance = ?,
+                hard_reps_long_pace = ?,
+                hard_reps_short_pace = ?
+            WHERE week = ?
+            """, (
+                self.runner_id,
+                self.total_distance,
+                self.hard_distance,
+                self.easy_distance,
+                self.session_count,
+                self.hard_pace,
+                self.run_count,
+                json.dumps(self.days),
+                self.hard_time,
+                self.easy_pace,
+                self.easy_time,
+                self.lt1_distance,
+                self.lt2_distance,
+                self.lt1_pace,
+                self.lt2_pace,
+                self.hard_reps_long_distance,
+                self.hard_reps_short_distance,
+                self.hard_reps_long_pace,
+                self.hard_reps_short_pace,
+                self.week
+            ))
         conn.commit()
         conn.close()
