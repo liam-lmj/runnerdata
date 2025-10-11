@@ -85,12 +85,16 @@ class Activity:
         self.run_type = run_type
         self.lt1_pace = lt1_pace
         self.lt1_distance = lt1_distance
+        self.lt1_time = lt1_time
         self.lt2_pace = lt2_pace
         self.lt2_distance = lt2_distance
+        self.lt2_time = lt2_time
         self.hard_reps_long_pace = hard_reps_long_pace
         self.hard_reps_long_distance = hard_reps_long_distance
+        self.hard_reps_long_time = hard_reps_long_time
         self.hard_reps_short_pace = hard_reps_short_pace
         self.hard_reps_short_distance = hard_reps_short_distance
+        self.hard_reps_short_time = hard_reps_short_time
 
     def activity_exists(self):
         conn = sqlite3.connect('runner.db')
@@ -126,7 +130,11 @@ class Activity:
                   {self.hard_reps_long_pace},
                   {self.hard_reps_short_distance},
                   {self.hard_reps_short_pace},
-                  {self.hard_reps_long_distance})""")
+                  {self.hard_reps_long_distance},
+                  {self.lt1_time},
+                  {self.lt2_time},
+                  {self.hard_reps_short_time},
+                  {self.hard_reps_long_time})""")
         conn.commit()
         conn.close()
         update_gear(self.easy_distance / mile_conversion, self.hard_distance / mile_conversion)
@@ -148,12 +156,16 @@ class Activity:
                     easy_time = {self.easy_time},
                     lt2_distance = {self.lt2_distance},
                     lt2_pace = {self.lt2_pace},
+                    lt2_time = {self.lt2_time},
                     lt1_pace = {self.lt1_pace},
                     lt1_distance = {self.lt1_distance},
+                    lt1_time = {self.lt1_time},
                     hard_reps_long_pace = {self.hard_reps_long_pace},
                     hard_reps_long_distance = {self.hard_reps_long_distance},
+                    hard_reps_long_time = {self.hard_reps_long_time},
                     hard_reps_short_pace = {self.hard_reps_short_pace},
-                    hard_reps_short_distance = {self.hard_reps_short_distance}
+                    hard_reps_short_distance = {self.hard_reps_short_distance},
+                    hard_reps_short_time = {self.hard_reps_short_time}
                     WHERE id = {self.activity_id}
                     """)
         conn.commit()

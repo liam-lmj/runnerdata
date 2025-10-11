@@ -1,12 +1,21 @@
 import sqlite3
 import json
 from datetime import datetime, timedelta
-from constants import min_miles_conversion
+from constants import min_miles_conversion, week_order
 
 class Week:
     def __init__(self, week, runner_id):
         self.week = week
         self.runner_id = runner_id
+        self.total_distance = 0
+        self.hard_distance = 0
+        self.easy_distance = 0
+        self.session_count = 0
+        self.run_count = 0
+        self.hard_pace = 0
+        self.hard_time = 0
+        self.easy_time = 0
+        self.easy_pace = 0
         self.days = {}
         self.set_up_total_attributes()
 
@@ -18,10 +27,26 @@ class Week:
         conn.row_factory = sqlite3.Row 
         c = conn.cursor()
                 
-        c.execute(f"""SELECT * 
-                    FROM activity
-                    WHERE runner_id = {self.runner_id}
-                    AND (date BETWEEN DATE('{week_start}') AND DATE('{week_end}'))""")
+        c.execute("""
+            SELECT
+                date,
+                run_type,
+                COALESCE(easy_distance, 0) AS easy_distance,
+                COALESCE(easy_time, 0) AS easy_time,
+                COALESCE(hard_distance, 0) AS hard_distance,
+                COALESCE(hard_time, 0) AS hard_time,
+                COALESCE(lt1_distance, 0) AS lt1_distance,
+                COALESCE(lt1_time, 0) AS lt1_time,
+                COALESCE(lt2_distance, 0) AS lt2_distance,
+                COALESCE(lt2_time, 0) AS lt2_time,
+                COALESCE(hard_reps_long_distance, 0) AS hard_reps_long_distance,
+                COALESCE(hard_reps_long_time, 0) AS hard_reps_long_time,
+                COALESCE(hard_reps_short_distance, 0) AS hard_reps_short_distance,
+                COALESCE(hard_reps_short_time, 0) AS hard_reps_short_time
+            FROM activity
+            WHERE runner_id = ?
+            AND date BETWEEN ? AND ?
+        """, (self.runner_id, week_start, week_end))
 
         activities = c.fetchall()
 
@@ -33,26 +58,57 @@ class Week:
     def set_up_total_attributes(self):
         activities = self.get_activities()
         days = {}
-        self.total_distance = 0
-        self.hard_distance = 0
-        self.easy_distance = 0
-        self.session_count = 0
-        self.run_count = 0
-        self.hard_pace = 0
-        self.hard_time = 0
-        self.easy_time = 0
-        self.easy_pace = 0
+
+        for day in week_order:
+            default_values = {
+                "hard_distance": 0,
+                "easy_distance": 0,
+                "total_distance": 0,
+                "hard_time": 0,
+                "count_of_runs": 0,
+                "count_of_sessions": 0,
+                "hard_pace": 0,
+                "lt1_time": 0,
+                "lt1_pace": 0,
+                "lt1_distance": 0,
+                "lt2_time": 0,
+                "lt2_pace": 0,
+                "lt2_distance": 0,
+                "hard_reps_short_time": 0,
+                "hard_reps_short_pace": 0,
+                "hard_reps_short_distance": 0,
+                "hard_reps_long_time": 0,
+                "hard_reps_long_pace": 0,
+                "hard_reps_long_distance": 0
+            }
+            days[day] = default_values
+
 
         for activity in activities:
             date_string = activity["date"]
             date_datetime = datetime.strptime(date_string, "%Y-%m-%d %H:%M:%S")
             date_day = date_datetime.strftime("%w")
 
-            easy_distance = activity["easy_distance"]
-            hard_distance = activity["hard_distance"]
             run_type = activity["run_type"]
-            hard_time = activity["hard_time"]
+
+            easy_distance = activity["easy_distance"]
             easy_time = activity["easy_time"]
+
+            hard_distance = activity["hard_distance"]
+            hard_time = activity["hard_time"]
+
+            lt1_distance = activity["lt1_distance"]
+            lt1_time = activity["lt1_time"]
+
+            lt2_distance = activity["lt2_distance"]
+            lt2_time = activity["lt2_time"]
+
+            hard_reps_long_distance = activity["hard_reps_long_distance"]
+            hard_reps_long_time = activity["hard_reps_long_time"]
+
+            hard_reps_short_distance = activity["hard_reps_short_distance"] 
+            hard_reps_short_time = activity["hard_reps_short_time"] 
+
             self.total_distance += (easy_distance + hard_distance)
             self.hard_distance += hard_distance
             self.easy_distance += easy_distance
@@ -66,6 +122,17 @@ class Week:
                 days[date_day]["hard_distance"] += hard_distance
                 days[date_day]["easy_distance"] += easy_distance
                 days[date_day]["total_distance"] += (hard_distance + easy_distance)
+
+                days[date_day]["lt1_distance"] += lt1_distance
+                days[date_day]["lt2_distance"] += lt2_distance
+                days[date_day]["hard_reps_long_distance"] += hard_reps_long_distance
+                days[date_day]["hard_reps_short_distance"] += hard_reps_short_distance
+
+                days[date_day]["lt1_time"] += lt1_time
+                days[date_day]["lt2_time"] += lt2_time
+                days[date_day]["hard_reps_long_time"] += hard_reps_long_time
+                days[date_day]["hard_reps_short_time"] += hard_reps_short_time
+
                 days[date_day]["hard_time"] += hard_time
                 
                 days[date_day]["count_of_runs"] += 1
@@ -73,22 +140,18 @@ class Week:
                     days[date_day]["count_of_sessions"] += 1
                     if hard_time > 0 and hard_distance > 0:
                         days[date_day]["hard_pace"] = round(min_miles_conversion / (days[date_day]["hard_distance"] / days[date_day]["hard_time"]), 2)
-            else:
-                day_details = {}
 
-                day_details["hard_distance"] = hard_distance
-                day_details["easy_distance"] = easy_distance
-                day_details["total_distance"] = hard_distance + easy_distance
-                day_details["hard_time"] = hard_time
-                day_details["count_of_runs"] = 1
-                day_details["count_of_sessions"] = 0
-                if run_type == "Session":
-                    day_details["count_of_sessions"] += 1
-                if hard_time > 0 and hard_distance > 0:
-                    day_details["hard_pace"] = round(min_miles_conversion / (hard_distance / hard_time), 2)
-                else:
-                    day_details["hard_pace"] = 0
-                days[date_day] = day_details
+                    if lt1_time is not None and lt1_time > 0 and lt1_distance > 0:
+                        days[date_day]["lt1_pace"] = round(min_miles_conversion / (days[date_day]["lt1_distance"] / days[date_day]["lt1_time"]), 2)
+
+                    if lt2_time is not None and lt2_time > 0 and lt2_distance > 0:
+                        days[date_day]["lt2_pace"] = round(min_miles_conversion / (days[date_day]["lt2_distance"] / days[date_day]["lt2_time"]), 2)
+
+                    if hard_reps_long_time is not None and hard_reps_long_time > 0 and hard_reps_long_distance > 0:
+                        days[date_day]["hard_reps_long_pace"] = round(min_miles_conversion / (days[date_day]["hard_reps_long_distance"] / days[date_day]["hard_reps_long_time"]), 2)
+
+                    if hard_reps_short_time is not None and hard_reps_short_time > 0 and hard_reps_short_distance > 0:
+                        days[date_day]["hard_reps_short_pace"] = round(min_miles_conversion / (days[date_day]["hard_reps_short_distance"] / days[date_day]["hard_reps_short_time"]), 2)
         
         if self.hard_distance > 0 and self.hard_time > 0:
             self.hard_pace = round(min_miles_conversion / (self.hard_distance / self.hard_time), 2)
