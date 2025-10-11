@@ -40,9 +40,12 @@ def get_weekly_mileage(week_data):
         hard_pace = 0
         for day in week_order:
             if day in days_dict:
-                days_dict[day]["total_distance"] /= mile_conversion if type(days_dict[day]["total_distance"]) == float else 0
-                days_dict[day]["easy_distance"] /= mile_conversion if type(days_dict[day]["easy_distance"]) == float else 0
-                days_dict[day]["hard_distance"] /= mile_conversion if type(days_dict[day]["hard_distance"]) == float else 0
+                if type(days_dict[day]["total_distance"]) == float:
+                    days_dict[day]["total_distance"] /= mile_conversion 
+                if type(days_dict[day]["easy_distance"]) == float:
+                    days_dict[day]["easy_distance"] /= mile_conversion 
+                if type(days_dict[day]["hard_distance"]) == float:
+                    days_dict[day]["hard_distance"] /= mile_conversion 
 
                 sorted_dict[days_of_week[day]] = days_dict[day]
                 total_distance += days_dict[day]["total_distance"]
