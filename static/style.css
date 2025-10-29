@@ -201,7 +201,7 @@ body {
     color: white;
 }
 
-.form-container input[type="text"], .form-container input[type="number"], .form-container select{
+.form-container input[type="text"], .form-container input[type="number"], .form-container select {
     width: 100%;
     padding: 1rem;
     margin: 0.25rem 0 1.5rem 0;

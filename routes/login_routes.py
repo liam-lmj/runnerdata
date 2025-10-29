@@ -15,7 +15,6 @@ def authorise():
 @login_bp.route("/loaduser")
 def loaduser():
     code = request.args.get('code')
-
     refresh_token, runner_id = load_runner(code)
     session['user_id'] = runner_id
     runner = Runner(runner_id)

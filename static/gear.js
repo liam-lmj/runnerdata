@@ -10,6 +10,7 @@ const runTypes = ["Easy", "Hard"]
 
 function openAddForm() {
   popupAdd.style.display = "block";
+  settings.style.display = "none";
   popup.style.display = "none";
 }
 
@@ -63,6 +64,7 @@ function addAndClose(miles, default_type, trainer, type = "Add") {
 function openForm(gear_id, active, runType) {
   popup.style.display = "block";
   popupAdd.style.display = "none";
+  settings.style.display = "none";
   popup.dataset.gear_id = gear_id;
   activeSelection.value = active;
   defaultTypeSelection.value = runType;

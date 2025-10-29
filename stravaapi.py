@@ -10,7 +10,12 @@ client_id = os.getenv("client_id")
 client_secret = os.getenv("client_secret")
 
 def load_runner(code):
-    response = requests.post(runner_url, params={"client_id": client_id, "client_secret": client_secret, "code": code, "grant_type": "authorization_code"})
+    print("loading runner")
+    print(code)
+    print(client_id)
+    print(client_secret)
+    response = requests.post(runner_url, data={"client_id": client_id, "client_secret": client_secret, "code": code, "grant_type": "authorization_code"}, timeout=10)
+    print(f"response: {response}")
     if not response.ok:
         raise Exception("Failed get runner")
     response_json = response.json()
