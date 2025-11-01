@@ -9,50 +9,38 @@
 </table>
 
 <div id="settings" class="form-popup">
-    <form class="form-container"id="settings_form">
+    <form class="form-container" id="settings_form" onsubmit="formSubmission(event)">
         <h1 class="form-header">User Settings</h1>
 
         <label for="Prefered Unit"><b>Prefered Unit</b></label>
         <select id="selected_unit" name="selected_unit" required>
             <option value="Miles">Miles</option>
-            <option value="Kilometeres">Kilometeres</option>
+            <option value="Kilometers">Kilometers</option>
         </select> 
 
         <label for="Running Zones Method"><b>Running Zones Method</b></label>
-        <select id="selected_zone_method" name="selected_unit_method" required>
+        <select id="selected_zone_method" name="selected_zone_method" required>
             <option value="Pace">Pace</option>
             <option value="Heartrate">Heartrate</option>
         </select> 
-
-        <label for="LT2 Threshold"><b>LT2 Threshold</b></label>
-        <input type="number" placeholder="0" id = "lt2_threshold" name="lt2_threshold" min="0" required>
-        <br>
 
         <label for="LT1 Threshold"><b>LT1 Threshold</b></label>
         <input type="number" placeholder="0" id = "lt1_threshold" name="lt1_threshold" min="0" required>
         <br>
 
+        <label for="LT2 Threshold"><b>LT2 Threshold</b></label>
+        <input type="number" placeholder="0" id = "lt2_threshold" name="lt2_threshold" min="0" required>
+        <br>
+
         <label for="Hard Pace Threshold"><b>Hard Pace Threshold</b></label>
-        <input type="number" placeholder="0" id = "hard_threshold" name="lt2_threshold" min="0" required>
+        <input type="number" placeholder="0" id = "hard_threshold" name="hard_threshold" min="0" required>
         <br>
 
         <div class="button-group">
-            <button type="button">Add</button>
+            <button type="submit" >Update</button>
             <button type="reset" onclick="closeSettingsForm()">Cancel</button>
         </div>
     </form>
 </div>
 
-<script>
-    const settings = document.getElementById("settings");
-    function openSettings() {
-        settings.style.display = "block";
-        popupAdd.style.display = "none";
-        popup.style.display = "none";
-    }
-
-    function closeSettingsForm() {
-        settings.style.display = "none";
-    }
-
-</script>
+<script src="./static/banner.js"></script>

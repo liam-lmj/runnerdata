@@ -13,6 +13,15 @@ def gear():
     running_gear = get_running_gear(runner)
     if request.method == "POST":
         gear_updates = request.json
+        if gear_updates["type"] == "Settings":
+            unit = gear_updates["unit"]
+            method = gear_updates["method"]
+            lt2 = gear_updates["lt2"]
+            lt1 = gear_updates["lt1"]
+            hard = gear_updates["hard"]
+            print(f"unit: {unit} method: {method} lt2: {lt2} lt1: {lt1} hard: {hard}")
+
+            return jsonify({"success": True })
         gear_id = None
         if gear_updates["type"] == "Update":
             total_new_miles = gear_updates["totalNewMiles"]

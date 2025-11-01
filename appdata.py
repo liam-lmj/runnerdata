@@ -91,7 +91,6 @@ def pie_chart(week, df_week):
     pie_json = json.dumps(fig_pie, cls=plotly.utils.PlotlyJSONEncoder)
     return pie_json
 
-
 def bar_chart(week, df_days):
     filtered_df_days = (df_days[df_days['week'] == week]
                 .assign(Miles=lambda x: round(x['total_distance'], 2))
