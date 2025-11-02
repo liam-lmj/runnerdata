@@ -77,6 +77,26 @@ class Runner:
                     ))
         conn.commit()
         conn.close()
+    
+    def update_runner_settings(self, unit, method, lt1, lt2, hard):
+        conn = sqlite3.connect('runner.db')
+        c = conn.cursor()
+        c.execute(f"""UPDATE runner SET prefered_unit = ?, 
+                                        prefered_method = ?, 
+                                        lt1_zone = ?,
+                                        lt2_zone = ?,
+                                        hard_zone = ?
+                    WHERE id = ?""", 
+                    (
+                        unit,
+                        method,
+                        lt1,
+                        lt2,
+                        hard,
+                        self.id
+                    ))
+        conn.commit()
+        conn.close()
 
     def load_from_database(self):
         conn = sqlite3.connect('runner.db')

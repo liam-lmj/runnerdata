@@ -3,6 +3,8 @@ from database import get_running_gear, get_gear_by_id
 from gear import Gear
 from constants import run_types
 
+from runner import Runner
+
 gear_bp = Blueprint('gear', __name__)
 
 @gear_bp.route("/gear", methods=["GET", "POST"])
@@ -20,6 +22,10 @@ def gear():
             lt1 = gear_updates["lt1"]
             hard = gear_updates["hard"]
             print(f"unit: {unit} method: {method} lt2: {lt2} lt1: {lt1} hard: {hard}")
+
+            runner_id = session['user_id']
+            runner = Runner(runner_id)
+            runner.update_runner_settings(unit, method, lt1, lt2, hard)
 
             return jsonify({"success": True })
         
