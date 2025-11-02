@@ -1,5 +1,6 @@
 import sqlite3
 from datetime import datetime
+from constants import default_unit, default_type, hard_zone, lt1_zone, lt2_zone
 
 class Runner:
     def __init__(self, id):
@@ -12,7 +13,7 @@ class Runner:
         else:
             self.total_distance = 0
             self.latest_activity = None
-            self.refresh_token = None
+            self.refresh_token = None #don't store refresh token for new runners anymore
     
     def add_activities(self, activities):
         latest_activity = self.latest_activity
@@ -37,16 +38,43 @@ class Runner:
     def insert_runner(self):
         conn = sqlite3.connect('runner.db')
         c = conn.cursor()
-        c.execute(f"INSERT INTO runner VALUES ({self.id}, {self.total_distance}, '{self.latest_activity}', '{self.refresh_token}')")
+        c.execute("""INSERT INTO runner (id, 
+                                        total_distance, 
+                                        latest_Activity, 
+                                        refresh_token, 
+                                        prefered_unit, 
+                                        prefered_method, 
+                                        lt1_zone, 
+                                        lt2_zone, 
+                                        hard_zone)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                  (
+                      self.id,
+                      self.total_distance,
+                      self.latest_activity,
+                      self.refresh_token,
+                      default_unit,
+                      default_type,
+                      lt1_zone,
+                      lt2_zone,
+                      hard_zone
+                  ))
         conn.commit()
         conn.close()
     
     def update_runner(self):
         conn = sqlite3.connect('runner.db')
         c = conn.cursor()
-        c.execute(f"""UPDATE runner SET total_distance = {self.total_distance}, latest_Activity = '{self.latest_activity}', refresh_token = '{self.refresh_token}'
-                WHERE id = {self.id}
-                  """)
+        c.execute(f"""UPDATE runner SET total_distance = ?, 
+                                        latest_Activity = ?, 
+                                        refresh_token = ?
+                    WHERE id = ?""", 
+                    (
+                        self.total_distance,
+                        self.latest_activity,
+                        self.refresh_token,
+                        self.id
+                    ))
         conn.commit()
         conn.close()
 
@@ -58,5 +86,3 @@ class Runner:
         runner = c.fetchall()
         conn.close()
         return runner
-        
-

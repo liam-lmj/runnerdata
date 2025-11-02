@@ -22,6 +22,7 @@ def gear():
             print(f"unit: {unit} method: {method} lt2: {lt2} lt1: {lt1} hard: {hard}")
 
             return jsonify({"success": True })
+        
         gear_id = None
         if gear_updates["type"] == "Update":
             total_new_miles = gear_updates["totalNewMiles"]

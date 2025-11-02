@@ -8,11 +8,17 @@ activities_url = "https://www.strava.com/api/v3/athlete/activities"
 laps_url_start = "https://www.strava.com/api/v3/activities/"
 lap_url_end = "/laps"
 
-page_limit = 50 #number of new activities per runner
+page_limit = 50 #max number of new activities per runner
 min_miles_conversion = 26.8224 #divide m/s by this to get minutes per mile
 
-#activity fields
-session_pace = 7 #should be attribute of runner to allow users with wider ranges of abilities
+#activity fields defaults
+default_unit = "Miles"
+default_type = "Heartrate"
+hard_zone = 180
+lt1_zone = 170
+lt2_zone = 160
+
+session_pace = 7
 lt1_pace_zone = 7
 lt2_pace_zone = 6.66
 hard_pace_zone = 6.33
