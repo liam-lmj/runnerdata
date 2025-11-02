@@ -41,7 +41,7 @@ function initializeCharts(barData, pieData, week, mileageData) {
         fetch('/mileagechart', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ selectedWeek })
+            body: JSON.stringify({ selectedWeek, 'type': 'charts' })
         })
         .then(response => response.json())
         .then(data => {

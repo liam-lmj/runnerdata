@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, redirect, session, request, jsonif
 from database import get_plan_data
 from plan import Plan
 from appdata import bar_chart_plan, get_next_five_weeks
+from appsettings import update_settings
 
 next_five_weeks = get_next_five_weeks()
 
@@ -20,7 +21,9 @@ def trainingplan():
     bar_json_plans = bar_chart_plan(inital_week, df_plans) if training_plans else None
 
     if request.method == "POST": 
-        if request.json["type"] == "addPlan":
+        if request.json["type"] == "Settings":
+            return update_settings(request.json)
+        elif request.json["type"] == "addPlan":
             plan = Plan(request.json)
             if plan.plan_exists():
                 plan.update_plan()
@@ -29,7 +32,6 @@ def trainingplan():
                 plan.insert_plan()
             training_plans = get_plan_data(runner)
             return jsonify({"success": True, "training_plans": training_plans})
-        
         elif request.json["type"] == "updateChart":
             week = request.json["selectedWeek"]
             bar_json_plans = bar_chart_plan(week, df_plans)
