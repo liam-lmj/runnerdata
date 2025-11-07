@@ -13,13 +13,13 @@
         <h1 class="form-header">User Settings</h1>
 
         <label for="Prefered Unit"><b>Prefered Unit</b></label>
-        <select id="selected_unit" name="selected_unit" required>
+        <select id="selected_unit" name="selected_unit" value="{{ unit }}" required>
             <option value="Miles">Miles</option>
             <option value="Kilometers">Kilometers</option>
         </select> 
 
         <label for="Running Zones Method"><b>Running Zones Method</b></label>
-        <select id="selected_zone_method" name="selected_zone_method" required>
+        <select id="selected_zone_method" name="selected_zone_method" value="{{ method }}" required>
             <option value="Pace">Pace</option>
             <option value="Heartrate">Heartrate</option>
         </select> 
