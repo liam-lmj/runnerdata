@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, session, request, jsonify
-from database import get_running_gear, get_gear_by_id
+from database import get_running_gear, get_gear_by_id, get_runner_zones
 from gear import Gear
 from constants import run_types
 from appsettings import update_settings
@@ -12,6 +12,7 @@ def gear():
     if not 'user_id' in session:
         return redirect("/")
     runner = session['user_id']
+    unit, method, lt1, lt2, hard = get_runner_zones(runner)
     running_gear = get_running_gear(runner)
     if request.method == "POST":
         gear_updates = request.json
@@ -42,4 +43,10 @@ def gear():
             gear_id = gear.insert_gear()
 
         return jsonify({"success": True, "gear_id": gear_id})
-    return render_template("gear.html", running_gear=running_gear)
+    return render_template("gear.html", 
+                           running_gear=running_gear, 
+                           unit=unit, 
+                           method=method, 
+                           lt1=lt1, 
+                           lt2=lt2, 
+                           hard=hard)

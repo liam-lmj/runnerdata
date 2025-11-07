@@ -15,8 +15,8 @@ min_miles_conversion = 26.8224 #divide m/s by this to get minutes per mile
 default_unit = "Miles"
 default_type = "Heartrate"
 hard_zone = 180
-lt1_zone = 170
-lt2_zone = 160
+lt1_zone = 160
+lt2_zone = 170
 
 session_pace = 7
 lt1_pace_zone = 7

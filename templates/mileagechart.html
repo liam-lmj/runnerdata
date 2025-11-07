@@ -14,7 +14,7 @@
 
     <select class="drop-down" id="week" name="Week">
             {% for week in weekly_mileage %}
-                <option value="{{ week.week }}">{{ week.week}}</option>
+                <option value="{{ week.week }}">{{ week.week }}</option>
             {% endfor %}
     </select>
     <button class="button" onclick="parent.window.location.href='/mileagelog'">Grid View</button> 

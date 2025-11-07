@@ -1,6 +1,6 @@
 import sqlite3
 from plan import Plan
-from constants import mile_conversion
+from constants import mile_conversion, default_unit, default_type, lt1_zone, lt2_zone, hard_zone
 
 def dict_factory(cursor, row): 
     d = {}
@@ -8,7 +8,20 @@ def dict_factory(cursor, row):
         d[col[0]] = row[idx]
     return d
 
-#TODO need to add user to the sql calls to support multiple data in the future
+def get_runner_zones(runner):
+    conn = sqlite3.connect('runner.db')
+    conn.row_factory = dict_factory 
+    c = conn.cursor()
+    c.execute(f"SELECT * FROM runner WHERE id = {runner}")
+    runner_data = c.fetchone()
+    conn.close()
+    unit = runner_data["prefered_unit"] if runner_data["prefered_unit"] else default_unit
+    method = runner_data["prefered_method"] if runner_data["prefered_method"] else default_type
+    lt1 = runner_data["lt1_zone"] if runner_data["lt1_zone"] else lt1_zone
+    lt2 = runner_data["lt2_zone"] if runner_data["lt2_zone"] else lt2_zone
+    hard = runner_data["hard_zone"] if runner_data["hard_zone"] else hard_zone
+    return unit, method, lt1, lt2, hard
+
 def get_week_data(runner):
     conn = sqlite3.connect('runner.db')
     conn.row_factory = dict_factory 

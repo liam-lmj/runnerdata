@@ -1,6 +1,6 @@
 import pandas as pd
 from flask import Blueprint, render_template, redirect, session, request, jsonify
-from database import get_plan_data
+from database import get_plan_data, get_runner_zones
 from plan import Plan
 from appdata import bar_chart_plan, get_next_five_weeks
 from appsettings import update_settings
@@ -14,6 +14,7 @@ def trainingplan():
     if not 'user_id' in session:
         return redirect("/")
     runner = session['user_id']
+    unit, method, lt1, lt2, hard = get_runner_zones(runner)
     training_plans = get_plan_data(runner)
     df_plans = pd.DataFrame(get_plan_data(runner)) if training_plans else None
     inital_week = df_plans['week'].iloc[0] if training_plans else None
@@ -42,4 +43,9 @@ def trainingplan():
                            bar_json_plans=bar_json_plans,
                            current_week=inital_week, 
                            next_five_weeks=next_five_weeks, 
-                           runner=runner) 
+                           runner=runner, 
+                           unit=unit, 
+                           method=method, 
+                           lt1=lt1, 
+                           lt2=lt2, 
+                           hard=hard) 
